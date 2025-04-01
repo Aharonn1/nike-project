@@ -1,0 +1,175 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.ex1{
+  background-color: red;
+  padding: 0;
+}
+.EX1CompB{
+  background-color: blue;
+}
+
+.EX1CompC{
+  background-color: green;
+}
+
+.products{
+  text-align: left;
+}
+
+.btn1{
+  float: left;
+}
+
+.btn2{
+  float: left;
+}
+  
+ul {
+  /* ... list styling as before */
+}
+
+.user-item {
+  /* ... list item styling as before */
+}
+
+.user-id,
+.user-name,
+.user-email {
+  margin: 0; /* Remove default margins */
+}
+
+.user-id {
+  font-weight: bold; /* Emphasize ID */
+}
+
+.posts-container {
+  border: 1px solid black;
+  width: 40px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  margin-bottom: 10px;
+}
+
+.post-title {
+  font-weight: 4px;
+  margin-bottom: 5px;
+}
+
+
+
+.user-email {
+  color: #999; /* Subdued color for email */
+}
+.Task{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  
+}
+
+.AddShoeBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.AddShoeBox h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.AddShoeBox form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.AddShoeBox label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.AddShoeBox input,
+.AddShoeBox textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.AddShoeBox button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.TableList > table  {
+  margin: 20px auto;
+}
+
+.TableList table, .TableList th, .TableList td ,.TableList img {
+  padding: 5px;
+  border: 1px solid;
+  border-collapse: collapse;
+  
+}
+
+
+.TableList td:first-of-type {
+  text-align: left;
+}
+
+.TableList tr:nth-child(even) {
+  background-color: lightskyblue;
+}
+
+.TableList tr:nth-child(odd) {
+  background-color: lightgreen;
+}
+
+.TableList thead > tr:first-child {
+  background-color: lightgray;
+}
+.card-image {
+  overflow: hidden;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: -30px;
+  border-radius: 6px;
+  box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.card-image img {
+  width: 100%;
+  height: 120px;
+  border-radius: 6px;
+  pointer-events: none;
+}

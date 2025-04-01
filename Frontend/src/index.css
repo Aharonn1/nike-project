@@ -1,0 +1,1933 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* מוסיפים צבע רקע בהיר */
+  background-color: #cef3f3; 
+  color: #011017; 
+  background-size: 50% ; /*  התאמת התמונה לגודל העמוד */
+  background-repeat: no-repeat; /* מונע חזרה של התמונה */
+}
+
+/* וודא שהסגנונות האלה נמצאים בסוף קובץ ה-CSS שלך או שיש להם ספציפיות גבוהה יותר */
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.ex1{
+  background-color: red;
+  padding: 0;
+}
+.EX1CompB{
+  background-color: blue;
+}
+
+.EX1CompC{
+  background-color: green;
+}
+
+.products{
+  text-align: left;
+}
+
+
+  
+.Posts {
+  border: 1px solid black;
+  position: absolute;
+  top: -20px;
+  right: -2px;
+  bottom: -10px;
+  /* left: -20px; */
+  z-index: 10;
+  display: flex; /* Enable flexbox layout */
+  flex-direction: column; /* Arrange items vertically */
+  flex-wrap: wrap; /* Wrap items to multiple lines if necessary */
+  width: 200px; /* Set a maximum width for the container */
+}
+
+.Todos {
+  border: 1px solid black;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  bottom: -10px;
+  left: 1000px;
+  z-index: 10;
+  display: flex; /* Enable flexbox layout */
+  flex-direction: column; /* Arrange items vertically */
+  flex-wrap: wrap; /* Wrap items to multiple lines if necessary */
+  width: 200px; /* Set a maximum width for the container */
+}
+
+.shoes-card {
+  /* Existing styles... */
+}
+
+.shoes-card {
+  margin: 10px;
+  padding: 15px;
+  border-bottom: 1px solid #ddd; /* מוסיף קו תחתון */
+}
+
+
+
+/*  */
+.shoes-card {
+  /* Existing styles... */
+}
+
+
+/* Overall login form styling */
+.login-form {
+  display: flex; /* Center the form horizontally */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Cover the entire viewport height */
+  background-color: #f0f2f5; /* Light background */
+  justify-content:center; /* Buttons positioned at opposite ends */
+}
+
+/* Login form container */
+#loginForm {
+  background-color: #fff; /* White background for the form */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 30px;
+  max-width: 400px; /* Limit form width for responsiveness */
+  width: 100%; /* Ensure full width within the container */
+  justify-content:center; /* Buttons positioned at opposite ends */
+
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 15px; /* Spacing between form elements */
+}
+
+/* Labels */
+label {
+  display: block; /* Display labels on their own line */
+  margin-bottom: 5px; /* Spacing between label and input */
+  font-weight: bold; /* Emphasize labels */
+}
+
+/* Input fields */
+input[type="text"],
+input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 3px; /* Rounded corners */
+  font-size: 16px; /* Consistent font size */
+}
+
+/* Login button */
+button[type="submit"] {
+  background-color: #4CAF50; /* Green button color */
+  color: white; /* White text color */
+  padding: 10px 20px;
+  border: none; /* Remove default button border */
+  border-radius: 3px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickable state */
+  transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+}
+button[type="submit"]:hover {
+  background-color: #3e8e41; /* Darker green on hover */
+}
+
+/* Error message styling */
+.error-message {
+  color: red; /* Red text for error messages */
+  font-weight: bold; /* Emphasize errors */
+  margin-bottom: 10px; /* Spacing after error message */
+}
+
+/* Forgot password link */
+a[href="#"] {
+  color: #999; /* Greyed out link color */
+  text-decoration: none; /* Remove underline */
+  transition: color 0.2s ease-in-out; /* Smooth hover effect */
+}
+a[href="#"]:hover {
+  color: #666; /* Darker grey on hover */
+}
+
+/*  */
+
+
+.category {
+  background-color: #f5f5f5; /* Light background */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 15px;
+  margin-bottom: 15px; /* Spacing between cards */
+  display: flex; /* Allow buttons to stack horizontally */
+  align-items: center; /* Buttons vertically aligned with category name */
+  justify-content:center; /* Buttons positioned at opposite ends */
+}
+
+/* Category name when not editing */
+.category .category-name {
+  font-weight: bold;
+  margin-right: 10px; /* Spacing between name and edit button */
+}
+
+/* Edit form and buttons when editing */
+.category.editing {
+  border: 1px solid #ccc; /* Light border when editing */
+}
+
+.category input[type="text"] {
+  padding: 5px;
+  border: 1px solid #ccc; /* Consistent border */
+  border-radius: 3px; /* Rounded corners */
+  font-size: 16px;
+  margin-bottom: 5px; /* Spacing after input */
+  width: 100%; /* Fill available space */
+}
+
+.category button {
+  padding: 5px 10px;
+  border: none; /* Remove default button border */
+  border-radius: 3px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickable state */
+  transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+
+.category button:hover {
+  background-color: #f0f0f0; /* Lighter background on hover */
+}
+
+/* Edit button style */
+.category button[type="button"] {
+  background-color: #4CAF50; /* Green button color */
+  color: white; /* White text color */
+}
+
+/* Update button style */
+.category button[type="submit"] {
+  background-color: #3f51b5; /* Blue button color */
+  color: white; /* White text color */
+}
+
+/* Cancel button style */
+.category button[type="reset"] {
+  background-color: #f0ad4e; /* Orange button color */
+  color: white; /* White text color */
+}
+
+/* Delete button style */
+.category button[type="button"].delete {
+  background-color: #d9534f; /* Red button color */
+  color: white; /* White text color */
+}
+
+.product-box  img {
+  width: 260px; /* Adjust width as needed */
+  height: 200px; /* Adjust height as needed */
+  object-fit: cover; /* Scales image to fill container while maintaining aspect ratio */
+  border-radius: 5px; /* Add rounded corners */
+}
+
+.orders-table {
+  width: 100%; /* Make the table fill the available space */
+  border-collapse: collapse; /* Remove borders between cells */
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 10px; /* Add some padding for better readability */
+  text-align: left; /* Align content to the left */
+  border: 1px solid #ddd; /* Add a thin border to each cell */
+}
+
+.orders-table thead th {
+  background-color: #eee; /* Light background color for headers */
+  font-weight: bold; /* Bold text for headers */
+}
+
+
+
+.listProduct .item button{
+  background-color: black;
+  color: #eee;
+  padding:  5px 10px;
+  border-radius: 20px;
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.cartTab{
+  width: 400px;
+  background-color: #353432;
+  color: #eee;
+  position: fixed;
+  inset: 0 0 0 auto;
+  /* display: grid; */
+  /* grid-template-rows: 70px 1fr 70px; */
+}
+
+.cartTab h1{
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+}
+
+.cartTab .btn{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+}
+
+.cartTab .btn button{
+  background-color: #E8bc0e;
+  border: none;
+  font-family: Poppins;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cartTab .btn .close{
+  background-color:#eee;
+}
+
+/* .cartTab .listCart .item {
+  display: grid;
+  grid-template-columns: 70px 150px 50px 1fr;
+  gap: 20px;
+  text-align: center;
+  align-items: center;
+} */
+
+.icon-cart {
+  position: fixed; 
+  top: 10px;  /* Position 10 pixels from the top */
+  right: 10px; /* Position 10 pixels from the right */
+  z-index: 10;  /* Ensure it's on top of other elements */
+  cursor: pointer; /* Make it clickable */
+}
+
+svg{
+  width: 50px;
+  height: inherit;
+}
+
+body.showCart .cartTab{
+  inset: 0 0 0 auto;
+}
+
+body.showCart .con{
+  inset: 0 0 0 auto;
+}
+
+.svg-container {
+  position: absolute; /* Make the container relative to its parent */
+  top: 0; /* Position at the top */
+  right: 0; /* Position at the right */
+}
+
+.listProduct {
+  /* Styles for the main product list container */
+}
+
+.cart-icon-container {
+  /* Styles for the shopping cart icon container */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.cart-icon-container:hover {
+  /* Add a hover effect to the icon container */
+  transform: scale(1.1);
+}
+
+/* 
+/* וודא שהסגנונות האלה נמצאים בסוף קובץ ה-CSS שלך או שיש להם ספציפיות גבוהה יותר */
+
+.range input[type="range"] {
+  /* סגנונות ספציפיים לסליידר */
+  position: left;
+  width: 200px; /* או כל רוחב רצוי */
+  height: 10px;
+  background: #ddd;
+  outline: none;
+  -webkit-appearance: none; /* מסיר את המראה הברירת מחדל של הסליידר */
+  /* הוסף סגנונות נוספים להתאמה אישית */
+}
+
+.range .filed {
+  position: left;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 100%;
+}
+
+.range .filed input {
+  position: left;
+  -webkit-appearance:none;
+  height: 3px;
+  width: 10%;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+
+.center-link {
+  text-align: center; /* מרכז את הטקסט בתוך האב */
+  margin: 0 auto; /* מרכז את האלמנט באופן אופקי */
+}
+
+.container {
+  display: flex;
+  height: 1000px;
+  justify-content: center;
+}
+
+.category {
+  width: 33.33%;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.category h3 {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.category button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.category button:hover {
+  background-color: #0069d9;
+}
+
+.category input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.shoes-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 0 auto; /* מרכז את הרכיב */
+  width: 80%; /* רוחב מקסימלי של 80% */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.shoes-card h2 {
+  margin-bottom: 10px;
+}
+
+.shoes-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.shoes-card li {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.shoes-card h3,
+.shoes-card p {
+  margin: 5px 0;
+}
+
+.shoes-card input,
+.shoes-card textarea {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.shoes-card button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.shoes-card button:hover {
+  background-color: #eee;
+}
+
+.fullName {
+  font-weight: bold;
+  color: #ce962e; /* צבע אפור כהה */
+}
+
+.charts-container { /* מחלקה חדשה למיכל הגרפים */
+  width: 400px; /* רוחב קבוע למיכל */
+  margin: 0 auto; /* מרכז את המיכל אופקית */
+}
+
+.shoes-card {
+  /* סגנונות כלליים עבור הכרטיס */
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #28b42f;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.customer-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.section-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.order-list {
+  list-style: none;
+  padding: 0;
+}
+
+.order-list li {
+  margin-bottom: 15px;
+}
+
+.shoes-card {
+  /* סגנונות כלליים עבור הכרטיס */
+  /* width: 80%; */
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(20, 20, 220, 0.1);
+  background-color: #a9e4b1; /* צבע לבן שמנת */
+  /* מוסיפים פינות מעוגלות */
+  border-radius: 10px;
+}
+
+.product-box {
+  display: grid;
+  display: flow-root;
+  margin-left: 80px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out; /* מעבר חלק בין מצבים */
+
+  &:hover {
+    box-shadow: 0px 0px 20px rgba(0.8, 0.8, 0.8, 0.3);
+    transform: scaleX(1.15);
+    background-color: #f5f5f5;
+  }
+}
+
+.item {
+  /* ... your existing styles ... */
+  display: grid;
+  margin-right: 20px;
+  border-radius: 5px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; /* או גובה אחר שמתאים לך */
+}
+
+.center-select {
+  /* הסר את margin: 0 auto; מכיוון ש-flexbox מטפל במיקום */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; /* או גובה אחר שמתאים לך */
+}
+
+.center-button {
+  text-align: center; /* מרכז את התוכן בתוך הקונטיינר */
+}
+
+.center-button .NavLink {
+  display: inline-block;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #43abc8;
+}
+
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  justify-content: center; /* מרכז את הגריד בתוך הקונטיינר */
+  align-items: center; /* מרכז את הפריטים אנכית בתוך העמודות */
+}
+
+
+
+.bbb {
+  font-family: inherit; /* יורש את הגופן הכללי */
+  font-size: 16px;
+  padding: 8px 10px; /* רווח פנים */
+  border: 1px solid #ccc; /* גבול אפור בהיר */
+  border-radius: 5px; /* פינות מעוגלות */
+  background-color: #f8f8f8; /* צבע רקע בהיר */
+  color: #0c0101; /* צבע טקסט כהה */
+  cursor: pointer; /* סמן עכבר כמצביע */
+  outline: none; /* מסיר את קו המתאר ברירת מחדל */
+  display: inline-block; /* מאפשר למרכז את האלמנט */
+}
+
+
+.bbb::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%; /* מרכז את החץ אופקית */
+  transform: translate(-50%, -50%) rotate(45deg); /* מסובב את החץ ב-45 מעלות */
+  border: solid 6px transparent; /* יוצר משולש עם שוליים שקופים */
+  border-bottom-color: #3498db; /* צבע כחול */
+  border-left-color: #3498db;
+  
+}
+
+.bbb:focus::after {
+  border-color: #000000; /* צבע חץ כהה יותר בפוקוס */
+}
+
+
+.ccc, .ddd ,.qqq,.bbb  {
+  padding: 12px 25px;
+  background-color: rgb(14, 126, 245); /* צבע כחול */
+  color: white;
+  border: none; /* מסיר את הגבול הקיים */
+  border-radius: 8px; /* מעגל את פינות הכפתור */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* צל עדין */
+  transition: all 0.2s ease-in-out; /* מעבר חלק בין מצבים */
+}
+
+ .bbb ,.qqq {
+  padding: 12px 25px;
+  background-color: rgb(14, 126, 245); /* צבע כחול */
+  color: white;
+  border: none; /* מסיר את הגבול הקיים */
+  border-radius: 8px; /* מעגל את פינות הכפתור */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* צל עדין */
+  transition: all 0.2s ease-in-out; /* מעבר חלק בין מצבים */
+}
+
+.ccc:hover, .ddd:hover , .qqq:hover ,.bbb:hover {
+  background-color: rgb(20, 101, 250); /* צבע כחול כהה יותר בהעברה עכבר */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* צל בולט יותר */
+  transform: translateY(-2px); /* מעלה את הכפתור מעט */
+}
+
+.bbb:hover, .ddd:hover {
+  background-color: rgb(20, 101, 250); /* צבע כחול כהה יותר בהעברה עכבר */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* צל בולט יותר */
+  transform: translateY(-2px); /* מעלה את הכפתור מעט */
+}
+
+.qqq {
+  width: 280px !important;
+  padding: 15px;
+  border: 2px solid #007bff; /* גבול כחול כהה ועבה יותר */
+  border-radius: 8px;
+  font-size: 18px;
+  background-color: #f2f2f2; /* צבע רקע אפור בהיר */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* צל בולט יותר */
+  
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.bbb,
+.qqq,
+.ccc,
+.ddd {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #f0f0f0; /* צבע רקע אחיד */
+  color: #333; /* צבע טקסט אחיד */
+}
+
+.qqq {
+  /* סגנונות ייחודיים עבור input */
+  width: auto; /* מאפשר לגודל להתאים לסגנונות הכלליים */
+  height: auto;
+  display: flex;
+  align-items: center;
+  
+  /* הסרנו את שאר הסגנונות הספציפיים */
+}
+
+.qqq::before {
+  content: "\f002";
+  font-family: FontAwesome;
+  font-size: 16px; /* התאמת גודל האייקון לגודל הגופן הכללי */
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px; /* מעגל את פינות הטבלה */
+  overflow: hidden; /* מסתיר גלישה של תוכן */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* מוסיף צל עדין */
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #140101;
+  border-right: 1px solid #140101;
+}
+
+.orders-table td:last-child {
+  border-right: none; /* מסיר את הגבול הימני מהתא האחרון בכל שורה */
+}
+.orders-table th {
+  background-color: #f60101; /* צבע רקע לכותרות */
+  font-weight: bold;
+}
+
+/* מעצב את השורה הראשונה בצורה שונה (אופציונלי) */
+.orders-table tr:first-child {
+  border-top: 1px solid #080000;
+}
+
+.orders-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+#registerForm {
+  background-color: #f2f2f2;
+  border-radius: 10px; /* מעגל פינות הכרטיסיה */
+  padding: 20px; /* רווח פנימי בכרטיסיה */
+  width: 400px; /* רוחב הכרטיסיה (התאם לפי הצורך) */
+  margin: 0 auto; /* מרכז את הכרטיסיה בדף */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* צל עדין */
+}
+
+.form-group {
+  margin-bottom: 15px; /* רווח בין שדות הטופס */
+}
+
+label {
+  display: block; /* מציב תוויות מעל כל שדה טופס */
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"] {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px; /* מעגל פינות של שדות טופס */
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px; /* רווח מעל הודעת שגיאה */
+}
+
+button[type="submit"] {
+  background-color: #4CAF50; /* צבע כפתור */
+  color: white;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.category {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out; /* מוסיף מעבר חלק בין מצבים */
+}
+
+.category:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.05); /* מגדיל ומרים את הקטגוריה */
+}
+
+.category.selected {
+  /* סגנונות נוספים לקטגוריה שנבחרה, אם תרצה */
+  background-color: rgb(20, 101, 250);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.shoe-card {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 5px rgba(242, 5, 5, 0.1);
+  background-color: #fff;
+}
+
+.shoe-card:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.shoe-card .shoe-image {
+  width: 100%;
+  height: 200px; /* Adjust height as needed */
+  object-fit: cover; /* Ensures image fills the container */
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.shoe-card .shoe-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.shoe-card .shoe-details h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.shoe-card .shoe-details p {
+  margin-bottom: 5px;
+}
+
+.shoe-card .order-details {
+  margin-top: 2000px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.product-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product-tab {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 300px; 
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 570px; /* גובה קבוע לכרטיסיות */
+  overflow: hidden; /* מונע גלישה של תוכן */
+}
+
+.product-tab img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.edit-form {
+  margin-top: 20px;
+}
+
+.edit-form input,
+.edit-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+.orders-details { 
+  visibility: hidden; /* מסתיר את פרטי ההזמנות */
+  opacity: 0; /* הופך את פרטי ההזמנות לשקופים */
+  transition: visibility 0s, opacity 0.5s linear; /* מוסיף אפקט מעבר */
+  height: 0; /* מגדיר גובה התחלתי ל-0 */
+  overflow: hidden; /* מונע גלישה של תוכן */
+}
+
+.product-tab:hover .orders-details {
+  visibility: visible; /* מציג את פרטי ההזמנות בעת ריחוף */
+  opacity: 1; /* הופך את פרטי ההזמנות לאטומים */
+  height: 2950%; /* מתאים את הגובה לתוכן */
+}
+
+.product-tab img { /* סלקטור CSS לתמונות בתוך כרטיסיות המוצרים */
+  width: 200px; /* קבע את רוחב התמונה ל-200 פיקסלים */
+  height: 200px; /* קבע את גובה התמונה ל-200 פיקסלים */
+  object-fit: cover; /* שמור על יחס גובה-רוחב תוך התאמת התמונה למידות שהוגדרו */
+  border-radius: 10px; /* הוסף פינות מעוגלות לתמונה */
+  margin-bottom: 10px; /* הוסף שוליים תחתונים לתמונה */
+}
+
+.orders-details {
+  background-color: #fff8f8;
+  padding: 20px;
+  border: 1px solid #ccc;
+  transition: all 0.9s ease;
+}
+
+.orders-details:hover {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.orders-details {
+  /* סגנון בסיסי */
+  height: 250px; /* גובה התחלתי */
+  transition: height 0.3s ease-in-out; /* מעבר חלק בגודל */
+}
+
+.orders-details:hover {
+  /* סגנון בעת מעבר עכבר */
+  height: 300px; /* גובה חדש בעת מעבר עכבר */
+}
+
+.center-select {
+  /* מיקום ומרכז */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0; /* רווח למעלה ולמטה */
+}
+
+.center-select select {
+  /* סגנון תפריט הבחירה */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px; /* פינות מעוגלות */
+  font-size: 16px;
+  cursor: pointer; /* סמן עכבר משתנה בעת ריחוף */
+}
+
+.center-select select:focus {
+  /* סגנון בעת בחירה */
+  outline: none; /* הסרת קו מתאר כחול */
+  border: 1px solid #007bff; /* שינוי צבע גבול בעת בחירה */
+}
+
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.customer-table th,
+.customer-table td {
+  border: 2px solid #ccc; /* הגדלנו את עובי הגבול ושינינו את הצבע */
+  padding: 8px;
+  text-align: left;
+}
+
+.customer-table th {
+  background-color: #f0f0f0;
+}
+
+.customer-table tr:nth-child(even) {
+  background-color: #f2f2f2; 
+}
+
+.section-title { /* החלף את שם המחלקה אם יש צורך */
+  display: flex;
+  justify-content: center; /* מרכז אופקית */
+  align-items: center; /* מרכז אנכית (אופציונלי) */
+}
+
+.charts-container {
+  display: flex;
+  align-items: center; /* מרכז את הגרפים אנכית */
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 200px; /* התאם את הרוחב לפי הצורך */
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.card-body {
+  padding: -2px; /* חשוב להסיר את המינוס מהpadding */
+  background-color: #fff; /* הוספת צבע רקע לבן */
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  text-align: center;
+
+}
+
+.card-body {
+  padding: -2px; 
+  background-color: #fff; 
+}
+
+.charts-container {
+  display: flex;
+  justify-content: center; /* מרכז את האלמנטים אופקית */
+  align-items: center; /* מרכז את האלמנטים אנכית */
+  min-height: 95vh; /* מוודא שהאלמנט יתפוס את כל גובה המסך */
+}
+
+.bbb, .qqq, .ddd, .ccc {
+  padding: 10px;
+  margin-right: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.bbb, .qqq, .ddd, .ccc { /* הוספנו את כל המחלקות לרשימה */
+  padding: 10px; 
+  margin-right: 10px; /* הוספת רווח בין הכפתורים */
+  font-size: 16px; 
+}
+
+.login-card {
+  width: 300px; /* התאם את הרוחב לפי הצורך */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  text-align: center; /* מרכוז הכותרת */
+}
+
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.listProduct {
+  display:inline-flex;
+  align-items: center; /* מרכוז אופקי */
+  justify-content: center; /* מרכוז אנכי */
+  min-height: 100vh; /* גובה מינימלי של 100% מהviewport */
+  text-align: center; /* מרכוז הטקסט */
+}
+
+.item1 {
+  background-color: #f9f9f9; /* צבע רקע בהיר */
+  padding: 30px; /* ריווח פנימי */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* צל עדין */
+  max-width: 400px; /* רוחב מקסימלי */
+}
+
+
+
+.main-content img {
+  max-width: 300px; /* הגבל את רוחב התמונה ל-300 פיקסלים */
+  height: auto; /* גובה התמונה יתאים אוטומטית לרוחב */
+  border-radius: 10px; /* פינות מעוגלות */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* צל עדין */
+}
+
+.item1 h2 {
+  margin-bottom: 10px; /* ריווח מתחת לכותרת */
+}
+
+.Favorite {
+  background-color: #007bff; /* צבע רקע כחול */
+  border: none; 
+  color: #fff; /* צבע טקסט לבן */
+  padding: 12px 25px; /* ריווח פנימי גדול יותר */
+  text-align: center; 
+  text-decoration: none; 
+  display: inline-block; 
+  font-size: 18px; /* גודל גופן גדול יותר */
+  margin: 4px 2px; 
+  cursor: pointer; 
+  border-radius: 20px; 
+  transition: all 0.3s ease; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* צל במצב רגיל */
+}
+
+.Favorite:hover {
+  background-color: #0069d9; /* צבע כחול כהה יותר */
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); /* צל מודגש יותר */
+}
+
+.product-tab {
+  border: 1px solid #ccc;
+  height: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.product-tab:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.handleToggleLike {
+  background-image: linear-gradient(to right, #ff416c, #ff4b2b); /* Gradient */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.side-image img {
+  width: 130px; /*  הגדר את גודל התמונה הרצוי  */
+  height: auto; /*  שמירה על יחס גובה-רוחב  */
+}
+
+.main-image img {
+  max-width: 50%; /* התמונה תתפוס עד 50% מרוחב המסך */
+  height: auto; /* גובה התמונה יתאים אוטומטית לרוחב */
+  display: block; /*  מונע מרווחים מיותרים מתחת לתמונה */
+}
+
+.main-image img {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* צל עדין */
+}
+
+.container {
+  flex-direction: row; /* סידור האלמנטים בשורה */
+  align-items: center; /* מרכז את האלמנטים אנכית */
+  justify-content: center; /* מרכז את האלמנטים אופקית */
+  width: 90%;
+  margin-top: -50px;
+}
+
+.side-images {
+  flex-direction: column; /* סידור תמונות ההחלפה בעמודה */
+  margin-right: 20px; /* מרווח בין תמונות ההחלפה לתמונה הראשית */
+}
+
+.side-image {
+  margin-bottom: 10px; /* מרווח בין תמונות ההחלפה */
+}
+
+.side-image img {
+  max-width: 97px; /* הגבלת רוחב תמונות ההחלפה */
+  height: auto;
+}
+
+.main-image {
+  display: flex;
+}
+
+.main-image img {
+  max-width: 70%; /* התמונה תתפוס עד 50% מרוחב המסך */
+  height: auto; /* גובה התמונה יתאים אוטומטית לרוחב */
+}
+
+.item1 {
+  max-width: 100%; /* התמונה תתפוס עד 50% מרוחב המסך */
+  background-color: #f9f9f9; /* צבע רקע בהיר */
+  border-radius: 10px; /* פינות מעוגלות */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* צל עדין */
+}
+
+.item1 img {
+  max-width: 70%; /* התמונה תתפוס עד 50% מרוחב המסך */
+  height: auto; /* גובה אוטומטי לפי הפרופורציות */
+  border-radius: 10px; /* פינות מעוגלות */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* צל לתמונה */
+}
+
+.container {
+  display: flex;
+  align-items: center; /* מרכז את האלמנטים אנכית */
+  width: 90%;
+  
+}
+
+.main-image {
+  width: 70%; /* התמונה תתפוס 50% מרוחב הקונטיינר */
+  height: 900%;
+}
+
+ .main-image .react-player-video { 
+  width: 70%; /* התמונה תתפוס 50% מרוחב הקונטיינר */
+  height: 900%;
+  object-fit: fill; 
+}
+
+.main-image img {
+  width: 280%; /* התמונה תמלא את כל רוחב המיכל שלה */
+  border: 2px solid #ccc; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.item1 {
+  background-color: #f9f9f9; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  width: 1200px; /* הכרטיסיה תתפוס 50% מרוחב הקונטיינר */
+}
+
+.product-tab {
+  overflow: hidden; 
+}
+
+.orders-details {
+  max-height: 200px; /* הגבל את הגובה ל-200 פיקסלים */
+  overflow-y: auto; /* הוסף גלילה אנכית */
+}
+
+.sizes-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 5px; 
+  row-gap: 0px; /* מרווח מוקטן בין השורות */
+}
+
+.sizes-container p { 
+  border: 2px solid #ccc; 
+  text-align: center; 
+  border-radius: 5px; 
+  transition: transform 0.6s ease; 
+}
+
+.sizes-container p:hover {
+  transform: scale(1.1); 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.side-image {
+  position: relative; 
+}
+
+.play-icon {
+  position: absolute; 
+  top: 50%;
+  left: 50%;
+  font-size: 5px !important; /* הוספנו !important */
+  transform: translate(-50%, -50%);
+}
+
+.cartItem2 img {
+  max-width: 100px; /* הגדר רוחב מקסימלי לתמונה */
+  max-height: 130px; /* הגדר גובה מקסימלי לתמונה */
+  width: auto; /* אפשר לרוחב להסתגל אוטומטית */
+  height: auto; /* אפשר לגובה להסתגל אוטומטית */
+  object-fit: cover; /* שמור על יחס גובה-רוחב מקורי */
+  float: right; /* צף את התמונה ימינה */
+  margin-right: 40%; /* לדוגמה */
+  position: relative;
+  top: -80px; /* לדוגמה */  
+}
+
+
+
+.cartTab1{
+  width: 400px;
+  background-color: #353432;
+  color: #eee;
+  position: fixed;
+  inset: 0 0 0 auto;
+  display: grid;
+  grid-template-rows: 70px 1fr 70px;
+  margin: 0;
+
+}
+
+.cartTab1 h1{
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+}
+
+.cartTab1 .btn{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+}
+
+.cartTab1 .btn button{
+  background-color: #E8bc0e;
+  border: none;
+  font-family: Poppins;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cartTab1 .btn .close{
+  background-color:#eee;
+}
+
+.cartItem2 .details {
+  display: flex;
+  flex-direction: column; /* סידור האלמנטים בעמודה */
+  margin-right: 250px; /* הוספת מרווח מימין */
+}
+
+.size select {
+  padding: 3px 6px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-left: 4px;
+  background-color: #f5f5f5; /* צבע רקע בהיר */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* צל עדין */
+  min-width: 40px;
+  max-width: 50px;
+}
+
+.shoesUsers a {
+  text-decoration: none;
+}
+
+.out-of-stock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8); /* רקע לבן שקוף */
+  color: rgb(118, 105, 105); /* צבע טקסט אדום כהה */
+  padding: 15px 25px;
+  border-radius: 10px; /* פינות מעוגלות */
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+
+
+.product-box img {
+  opacity: 0.7; /* שקיפות לתמונה כאשר המוצר אזל */
+  transition: opacity 0.3s ease; /* מעבר חלק לשקיפות */
+}
+
+.product-box:hover img {
+  opacity: 1; /* הסרת השקיפות בעת ריחוף */
+}
+
+.out-of-stock {
+  /* ... */
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.out-of-stock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg); /* סיבוב ב-45 מעלות */
+  color: rgb(36, 27, 27); /* צבע טקסט אדום כהה */
+  padding: 15px 25px;
+  border-radius: 10px; /* פינות מעוגלות */
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 10;
+  white-space: nowrap; /* מונע שבירת שורה */
+}
+
+.product-box {
+  position: relative; /* חשוב עבור מיקום אבסולוטי של ההערה */
+  overflow: hidden; /* מונע מהטקסט לחרוג מגבולות התיבה */
+}
+
+.product-box img {
+  opacity: 0.7; /* שקיפות לתמונה כאשר המוצר אזל */
+  transition: opacity 0.3s ease; /* מעבר חלק לשקיפות */
+}
+
+.product-box:hover img {
+  opacity: 1; /* הסרת השקיפות בעת ריחוף */
+
+}
+
+.product-box img {
+  opacity: 1;  /* שינוי opacity ל-1 לתמונה בהירה יותר */
+  transition: opacity 0.3s ease; 
+}
+
+.product-box:hover img {
+  opacity: 10.8; /* שקיפות קלה בעת ריחוף */
+}
+
+/* עיצוב הטופס */.creditCard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}.creditCardInput { /* סלקטור כללי לכל תיבות ה-input */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 25%; /* Make inputs take up 25% of the screen width */
+  margin: 0 auto; /* Center the inputs horizontally */
+  box-sizing: border-box;
+}.creditCardInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* עיצוב הכפתור */.creditCard button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 25%; /* Make button width match inputs */
+  margin: 0 auto;
+}.creditCard button[type="submit"]:hover {
+  background-color: #0069d9;
+}
+
+/* ... שאר ה-CSS ... */
+
+/* עיצוב הטופס */
+.creditCard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.creditCardInput { /* סלקטור כללי לכל תיבות ה-input */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 25%; 
+  margin: 0 auto; 
+  box-sizing: border-box;
+}
+
+/* סלקטורים ספציפיים עבור name ו-expiry */
+.creditCardInput[name="name"],
+.creditCardInput[name="cvc"], 
+.creditCardInput[name="number"], 
+.creditCardInput[name="expiry"] {
+  width: auto; /* מאפשר לתיבות input להתאים את עצמן לתוכן */
+  min-width: 380px; /* קובע רוחב מינימלי כדי למנוע קיצוץ */
+}
+
+.creditCardInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* стили для notyf */
+.notyf {
+  position: fixed; /* כדי שההודעה תופיע במרכז העליון */
+  top: 20px; /* מרחק מהחלק העליון של המסך */
+  left: 50%; /* מרכז אופקי */
+  transform: translateX(-50%); /* הזז את ההודעה למרכז */
+  z-index: 10000; /* ודא שההודעה מעל שאר האלמנטים */
+  opacity: 0; /* התחל עם שקוף */
+  transition: opacity 0.3s ease-in-out; /* אנימציה של שקיפות */
+}
+
+.notyf--visible {
+  opacity: 1; /* הפוך את ההודעה לגלויה */
+}
+
+.notyf__wrapper {
+  background-color: #fff; /* צבע רקע של ההודעה */
+  border-radius: 5px; /* עיגול פינות */
+  padding: 10px 20px; /* ריווח פנימי */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* צל */
+}
+
+.notyf__message {
+  color: #333; /* צבע טקסט */
+}
+
+/* ... שאר ה-CSS ... */
+
+button.buy {
+  background-color: #1c9be0;
+  border: none;
+  color: white;
+  padding: 15px 70px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 120px 4px 128px; /* הוספנו מרווח שמאלי */
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition-duration: 0.4s;
+}
+
+button.buy:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid #1827cf;
+}
+
+p.totalPrice {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 4px 120px 4px 128px; /* הוספנו מרווח שמאלי */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  line-height: 1.5;
+  display: inline-block;
+}
+
+.cart-container {
+  text-align: center;
+}
+
+button.buy1 {
+  background-color: #1c9be0;
+  border: none;
+  color: white;
+  padding: 15px 70px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 140px 4px 128px; /* הוספנו מרווח שמאלי */
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition-duration: 0.4s;
+}
+
+button.buy1:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid #1827cf;
+}
+
+.listCart {
+  margin-left: 25px; /* הוספנו מרווח שמאלי */
+}
+
+.button.buy1 {
+  margin-left: 65px; /* הוספנו מרווח שמאלי */
+}
+
+
+nav .links { /* עיצוב הקישורים */
+  display: flex;
+  justify-content: center; /* מרכוז הקישורים */
+  margin-bottom: 10px; /* מרווח בין הקישורים לתמונה */
+}
+
+nav img {
+  width: 100%; /* תמונה ברוחב מלא */
+  height: 680px; /* גובה אוטומטי לפי יחס גובה-רוחב */
+}
+
+/* שאר הסגנונות הקיימים שלך */
+.image-container {
+  display: flex;
+  justify-content: space-between; /* מרווח שווה בין התמונות */
+}
+
+.img1,
+.img2 {
+    position: absolute;
+    width: 33.33%; /* שליש מהמסך */
+    height: 100vh; /* גובה המסך */
+    object-fit: cover; /* מילוי התמונה ושמירה על יחס גובה-רוחב */
+}
+
+.img1 {
+    left: 0; /* צמוד לצד שמאל */
+}
+
+.img2 {
+    right: 0; /* צמוד לצד ימין */
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 25px; /* עיגול הפינות */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* צל קל */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 20px; /* עיגול הפינות של הקישורים */
+  background-color: #e0e0e0;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* מעבר חלק */
+}
+
+.nav-links a:hover {
+  background-color: #d0d0d0;
+  transform: translateY(-3px); /* אפקט בליטה קלה */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* צל מודגש ב-hover */
+}
+
+.nav-links a:active{
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+
+.auth-links a {
+  text-decoration: none;
+  color: #333; /* צבע טקסט */
+  padding: 8px 15px; /* ריווח פנימי לקישורים */
+  border-radius: 15px; /* פינות מעוגלות לקישורים */
+  margin: 0 10px; /* ריווח בין הקישורים */
+  transition: background-color 0.3s ease; /* מעבר חלק */
+}
+
+.auth-links a:hover {
+  background-color: #e0e0e0; /* צבע רקע בהיר יותר ב-hover */
+}
+
+.auth-links a:active {
+  background-color: #d0d0d0;
+}
+
+.product-box a { /* או .product-box NavLink */
+  text-decoration: none;
+}
+
+.NavLink {
+  text-decoration: none;
+}
+
+button.buy1 {
+  background-color: #1c9be0;
+  border: none;
+  color: white;
+  padding: 15px 70px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 140px 4px 128px; /* הוספנו מרווח שמאלי */
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition-duration: 0.4s;
+}
+
+button.buy1:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid #1827cf;
+}
+
+.orders-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* מרכוז אופקי של התוכן */
+  justify-content: flex-start; /* או center למרכוז אנכי */
+  min-height: 100vh; /* מבטיח שהקונטיינר יתפוס את כל גובה המסך */
+}
+
+.total-orders {
+  font-weight: bold;
+  color: #333;
+  margin: 20px 0; /* מוסיף מרווח מלמעלה ומלמטה */
+  text-align: center; /* מרכוז הטקסט */
+}
+
+.total-price {
+  font-weight: bold;
+  color: #333;
+  margin: 20px 0; /* מוסיף מרווח מלמעלה ומלמטה */
+  text-align: center; /* מרכוז הטקסט */
+}
+
+.total-stock {
+  background-color: #f0f0f0; /* צבע רקע בהיר */
+  border-radius: 8px; /* פינות מעוגלות */
+  padding: 10px 15px; /* ריווח פנימי */
+  font-size: 1.1em; /* גודל פונט */
+  color: #333; /* צבע טקסט */
+  border: 1px solid #ddd; /* גבול דק */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* צל עדין */
+ 
+}
+
+.users-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* מרכוז אופקי של התוכן */
+}
+
+.search-input {
+  width: 20% !important;
+  padding: 8px 12px;
+  margin: 10px auto; /* הוספת auto margin למיקום באמצע */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px; /* תיקון גודל הפונט */
+  text-align: center;
+  display: block; /* כדי שmargin: auto יפעל */
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.product-tab {
+  position: relative; /* To position the edit form */
+}
+
+.edit-form {
+  display: none; /* Initially hide the form */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10; /* Ensure it's on top */
+}
+
+.product-tab button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.product-tab button:hover {
+  background-color: #3e8e41; /* Darker green on hover */
+}
+
+.edit-form input,
+.edit-form textarea {
+  width: 100%;
+  padding: 30px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Show the form when editing */
+.product-tab .edit-form {
+  display: block;
+}
+
+/* Add a transition for a smooth appearance */
+.edit-form {
+  width: 80%; /* Adjust the width as needed */
+  max-width: 500px; /* Set a maximum width to prevent it from getting too wide */
+  transition: opacity 1.3s ease-in-out;
+  opacity: 0; /* Initially hidden */
+}
+
+.product-tab .edit-form {
+  opacity: 1; /* Show with opacity transition */
+}
+
+.product-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.product-box {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-image {
+  max-width: 2400px;
+  height: 80%; /* שינוי לגובה של 80% */
+}
+
+.name,
+.total-price {
+  margin: 5px 0;
+}
+
+
+.comments-container {
+  width: 1000%;
+  max-width: 915px;
+  margin-top: 46px; /* הוספת מרווח עליון של 100px לתגובות */
+  padding: 20px;
+  margin-left: -650px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.comments-container h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.comments-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.comments-container li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.comments-container li:last-child {
+  border-bottom: none;
+}
+
+.comments-container strong {
+  font-weight: bold;
+  color: #555;
+  margin-right: 5px;
+}
+
+.comments-container p {
+  font-style: italic;
+  color: #777;
+}
+
+.add-comment {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; /* הצגה אנכית */
+  align-items: stretch; /* מתיחה לרוחב המיכל */
+}
+
+.add-comment input {
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-comment button {
+  padding: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* התאמה למסכים קטנים יותר */
+@media (max-width: 768px) {
+  .comments-container {
+    width: 100%; /* שימוש ברוחב מלא במסכים קטנים */
+    padding: 10px;
+  }
+}
+
+
+
+.container{
+  margin-top: 20px;
+} 
