@@ -1,11 +1,11 @@
-import express from "express";
-import expressFileUpload from "express-fileupload";
-import cors from "cors";
-import appConfig from "./2-utils/appConfig";
-import catchAll from "./3-middleware/catch-all";
 import routeNotFound from "./3-middleware/route-not-found";
+import expressFileUpload from "express-fileupload";
+import catchAll from "./3-middleware/catch-all";
 import taskRoutes from "./6-routes/task-routes";
 import authRoutes from "./6-routes/auth-routes";
+import appConfig from "./2-utils/appConfig";
+import express from "express";
+import cors from "cors";
 
 const server = express();
 

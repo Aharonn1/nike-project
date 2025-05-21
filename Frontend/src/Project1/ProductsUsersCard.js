@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import appConfig from "../Utils/AppConfig";
 import dataService from "../Service/DataService";
+import appConfig from "../Utils/AppConfig";
 import { NavLink } from "react-router-dom";
 
 function ProductUserCard(props) {
   const [filteredShoes, setFilteredShoes] = useState(props.shoes);
-  const [selectedShoe, setSelectedShoe] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const closeCartRef = useRef(null);
-  const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [selectedCategory, setSelectedCategory] = useState("");
-  const orderedShoes = filteredShoes.filter((shoe) => shoe.shoppingBasket > 0);
   const [stockData1, setStockData1] = useState([]);
-  const [shoesOutOfStock, setShoesOutOfStock] = useState({}); // הגדרת state חדש
+  const [shoesOutOfStock, setShoesOutOfStock] = useState({});
   const [outOfStockShoesDetails, setOutOfStockShoesDetails] = useState([]);
+  
   const toggleCart = () => {
     setShowCart(!showCart);
   };
@@ -34,7 +32,7 @@ function ProductUserCard(props) {
 
       if (stockData1) {
         const shoesOutOfStock = {};
-        const outOfStockShoesDetails = []; // מערך שיכיל את פרטי הנעליים שאזלו
+        const outOfStockShoesDetails = [];
 
         for (const item of stockData1) {
           if (!shoesOutOfStock[item.shoesId]) {
@@ -55,8 +53,8 @@ function ProductUserCard(props) {
         }
         console.log("shoesOutOfStock:", shoesOutOfStock);
         setShoesOutOfStock(shoesOutOfStock);
-        console.log("outOfStockShoesDetails:", outOfStockShoesDetails); // הדפסת פרטי הנעליים
-        setOutOfStockShoesDetails(outOfStockShoesDetails); // עדכון ה state עם פרטי הנעליים
+        console.log("outOfStockShoesDetails:", outOfStockShoesDetails);
+        setOutOfStockShoesDetails(outOfStockShoesDetails);   
       }
     })();
   }, []);
@@ -87,10 +85,6 @@ function ProductUserCard(props) {
     setFilteredShoes(filtered);
   }, [props.filteredShoes, selectedCategory, priceRange]);
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
   useEffect(() => {
     if (closeCartRef.current) {
       closeCartRef.current.addEventListener("click", toggleCart);
@@ -101,13 +95,6 @@ function ProductUserCard(props) {
       }
     };
   }, [closeCartRef]);
-
-  const isShoeOutOfStock = (shoe) => {
-    if (!shoe.sizes || shoe.sizes.length === 0) {
-      return false; // אם אין מידות, נניח שהוא לא אזל (אולי צריך טיפול אחר)
-    }
-    return shoe.sizes.every((size) => size.stock === 0);
-  };
 
   return (
     <div className="listProduct">

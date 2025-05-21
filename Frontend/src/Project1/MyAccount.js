@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Assuming you're using Axios for API calls
-import { useNavigate } from "react-router-dom";
 import dataService from "../Service/DataService";
 
 const MyAccount = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [updateStock, setUpdateStock] = useState(0);
   const [firstName, setFirstName] = useState("");
+  const [userData, setUserData] = useState(null);
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(""); // Consider using email instead
-  const [password, setPassword] = useState("");
   const [userId, setUserId] = useState();
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
-  const navigate = useNavigate();
-  const [deductStock, setDeductStock] = useState(true); // Default: deduct stock
-  const [userData, setUserData] = useState(null);
-  const [updateStock, setUpdateStock] = useState(0);
 
   const handleCheckboxChange = (event) => {
     setUpdateStock(event.target.checked ? 1 : 0);
@@ -42,17 +36,12 @@ const MyAccount = () => {
       setLastName(userData.userData.lastName);
       setEmail(userData.userData.email); // Assuming email is used for authentication
       setUpdateStock(userData.userData.updateStock);
-      // setPassword(userData.password); // Consider security implications
     }
   };
 
   useEffect(() => {
     handleUserDataChange(); // Call on initial render and whenever userData changes
   }, [userData]); // Dependency on userData
-
-  const handleDeductStockChange = (event) => {
-    setDeductStock(event.target.checked);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
@@ -62,7 +51,6 @@ const MyAccount = () => {
       lastName: lastName,
       email: email,
       updateStock : updateStock
-      // password: password,
     };
 
     try {
@@ -75,12 +63,6 @@ const MyAccount = () => {
     } catch (err) {
       alert(err.message);
     }
-
-    // Include deductStock value in your order submission logic
-    const orderData = {
-      // ... other order details
-      deductStock, // Add the deductStock value
-    };
   };
 
   return (

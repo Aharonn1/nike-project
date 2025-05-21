@@ -1,59 +1,15 @@
-import React, { PureComponent, useEffect } from "react";
-
-import { PieChart, Pie, Cell } from "recharts";
+import { PureComponent } from "react";
 import dataService from "../Service/DataService";
 import {
   ComposedChart,
   Line,
-  Area,
-  BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  {
-    name: "Page A",
-    uv: 590,
-    pv: 800,
-    amt: 1400,
-  },
-  {
-    name: "Page B",
-    uv: 868,
-    pv: 967,
-    amt: 1506,
-  },
-  {
-    name: "Page C",
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-  },
-  {
-    name: "Page D",
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-  },
-  {
-    name: "Page E",
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-  },
-  {
-    name: "Page F",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-  },
-];
 
 function getRandomColor() {
   const letters = "0123456789ABCDEF";
@@ -74,7 +30,10 @@ class Example extends PureComponent {
       orders3: [],
       users: [],
       error: null,
-      selectedUser: null, // הוספת משתנה state עבור המשתמש שנבחר
+      selectedUser: null,
+      totalQuantity: 0, // מצב חדש לסך כמות ההזמנות
+      allOrdersQuantityData: [], // מצב חדש עבור סך כמות ההזמנות
+      shoeTypesOrderedCount: 0, // <-- הוספנו מצב למספר סוגי הנעליים
     };
   }
 
@@ -91,31 +50,54 @@ class Example extends PureComponent {
             dataService.getAllUsers(),
           ]);
 
-        // if (ordersResponse.length !== shoesResponse.length && usersResponse) {
-        //   this.setState({
-        //     error: "נמצאה שגיאה בנתונים: מספר ההזמנות אינו תואם למספר הנעליים",
-        //   });
-        //   return;
-        // }
-
         const mergedData = ordersResponse.map((order, index) => ({
           value: order.total_quantity,
-          title: shoesResponse[index].title,
-      }));
+          title: order.title,
+        }));
 
-        // יצירת מערך חדש עם משתמשים ייחודיים
-
+        console.log("mergedData", mergedData);
         const uniqueUsers = usersResponse.filter((user, index, self) => {
           return self.findIndex((u) => u.userId === user.userId) === index;
         });
-        console.log("uniqueUsers", uniqueUsers); // שמירת המשתמשים הייחודיים ב-state
 
-        console.log(mergedData);
-        //   console.log("usersResponse", usersResponse);
+        console.log("uniqueUsers", uniqueUsers); // שמירת המשתמשים הייחודיים ב-state
+        const totalQuantityAllOrders = ordersResponse.reduce((sum, order) => {
+          return sum + order.total_quantity;
+        }, 0);
+
+        console.log("totalQuantityAllOrders", totalQuantityAllOrders);
+
+        const groupedShoesQuantity = ordersResponse.reduce((acc, order) => {
+          acc[order.shoesId] = acc[order.shoesId] || {
+            total_quantity: 0,
+            title: order.title,
+          };
+          acc[order.shoesId].total_quantity += order.quantity;
+          return acc;
+        }, {});
+
+        const allOrdersQuantityData1 = Object.keys(groupedShoesQuantity).map(
+          (item) => ({
+            title: item.title,
+            value: item.total_quantity,
+          })
+        );
+        // יצירת מבנה נתונים לגרף (אובייקט בודד עם הסכום)
+        const allOrdersQuantityData = [
+          {
+            title: "סך כל ההזמנות",
+            value: totalQuantityAllOrders,
+          },
+        ];
+
+        console.log("allOrdersQuantityData", allOrdersQuantityData);
+        // console.log(mergedData);
         this.setState({
           orders: mergedData,
           users: uniqueUsers,
           error: null,
+          allOrdersQuantityData: allOrdersQuantityData, // שמירת סך הכמות במצב
+          allOrdersQuantityData1: allOrdersQuantityData1,
         });
       } catch (error) {
         this.setState({ error: "שגיאה בטעינת הנתונים" });
@@ -127,7 +109,6 @@ class Example extends PureComponent {
   }
 
   filterProductsByCategory = (userId) => {
-    // const [shoes, setShoes] = useState([]);
     if (!userId) return this.state.users; // Return all shoes if no category selected
     // Ensure categoryId is a number for comparison
     const numericCategoryId = Number(userId);
@@ -143,7 +124,6 @@ class Example extends PureComponent {
     );
     console.log("filteredOrders", filteredOrders);
 
-    // קיבוץ ההזמנות לפי סוג מוצר וספירת הכמויות
     const groupedOrders = filteredOrders.reduce((acc, order) => {
       const productKey = order.shoesId; // או כל שדה אחר שמייצג את סוג המוצר
       acc[productKey] = acc[productKey] || {
@@ -159,7 +139,6 @@ class Example extends PureComponent {
 
     console.log("groupedOrders", groupedOrders);
 
-    // שינוי מבנה הנתונים למערך של אובייקטים
     const chartData = Object.values(groupedOrders).map((item) => ({
       title: item.title,
       quantity: item.total_quantity,
@@ -167,42 +146,58 @@ class Example extends PureComponent {
       value: item.value,
     }));
 
+    const totalQuantityByUser = filteredOrders.reduce((sum, order) => {
+      return sum + order.total_quantity;
+    }, 0);
+
+    const groupedShoesByUser = filteredOrders.reduce((acc, order) => {
+      acc[order.shoesId] = (acc[order.shoesId] || 0) + order.total_quantity;
+      return acc;
+    }, {});
+
+    console.log("groupedShoesByUser", groupedShoesByUser);
+
+    console.log("totalQuantityByUser", totalQuantityByUser);
+
     return Promise.resolve(chartData);
   };
 
-  // ... (שאר הקוד שלך)
-
-  handleUserChange = (event) => {
-    const selectedUserId = event.target.value;
-    this.filterOrdersByUser(selectedUserId)
-      .then((groupedOrders) => {
-        if (!groupedOrders || typeof groupedOrders !== "object") {
-          console.error("Invalid groupedOrders:", groupedOrders);
-          return;
-        }
-
-        const chartData = Object.entries(groupedOrders).map(
-          ([shoesId, { title, quantity, value }]) => ({
-            shoesId,
-            title,
-            quantity,
-            value,
-          })
+  handleUserChange = async (event) => {
+    const userId = event.target.value;
+    this.setState({ selectedUser: userId });
+    if (userId) {
+      try {
+        const filteredOrdersData = await this.filterOrdersByUser(userId);
+        this.setState({ filteredOrders: filteredOrdersData });
+        // עדכון סך הכמות כאן
+        const totalQuantity = filteredOrdersData.reduce(
+          (sum, order) => sum + order.quantity,
+          0
         );
-        console.log("chartData" , chartData)
-        this.setState({
-          selectedUser: selectedUserId,
-          filteredOrders: chartData,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+        this.setState({ totalQuantity: totalQuantity });
+      } catch (error) {
+        console.error("Error filtering orders:", error);
+        this.setState({ error: "שגיאה בסינון ההזמנות" });
+      }
+    } else {
+      this.setState({
+        filteredOrders: [],
+        totalQuantity: 0,
+        shoeTypesOrderedCount: 0,
+      }); // איפוס
+    }
   };
 
   render() {
-    const { orders, error } = this.state;
+    const {
+      orders,
+      error,
+      allOrdersQuantityData,
+      groupedOrders,
+      filteredOrders,
+    } = this.state; // достаем  allOrdersQuantityData
     console.log("orders in render:", orders); // הוספת בדיקה להדפסת המערך orders
+    console.log("orders in render:", filteredOrders); // הוספת בדיקה להדפסת המערך orders
 
     return (
       <div className="charts-container " style={{ display: "flex" }}>
@@ -213,40 +208,67 @@ class Example extends PureComponent {
           <div className="card-header">
             <h3>All products</h3>
           </div>
+
           <div className="card-body">
-            {error ? (
-              <p>{error}</p>
-            ) : (
-              <ComposedChart
-              width={800}
-              height={500}
-              data={this.state.orders}
-              margin={{
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20,
-              }}
-            >
-              <CartesianGrid stroke="#f5f5f5" />
-              <XAxis dataKey="title" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="red" // כאן תוכל לשנות גם את צבע הגרף השני
-                dot={{ r: 5 }}
-              />
-              <Bar dataKey="value" barSize={20} fill="#413ea0" />
-              <Line type="monotone" stroke="#ff7300" />
-            </ComposedChart>
+            {allOrdersQuantityData.length > 0 && (
+              <>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "10px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Total quantity of shoes ordered :{" "}
+                  {allOrdersQuantityData[0].value}
+                </div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "10px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  "The number of types of shoes ordered" : {orders.length}
+                </div>
+                <ComposedChart
+                  width={800}
+                  height={532}
+                  data={orders}
+                  margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
+                  }}
+                >
+                  <CartesianGrid stroke="#f5f5f5" />
+                  <XAxis dataKey="title" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar
+                    dataKey="value"
+                    barSize={20}
+                    fill="#8884d8"
+                    name="Total Quantity"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="red"
+                    dot={{ r: 5 }}
+                    name="Total Quantity"
+                  />
+                  <Line type="monotone" stroke="#ff7300" />
+                </ComposedChart>
+              </>
             )}
+            {!allOrdersQuantityData.length && <p>No orders data available.</p>}
           </div>
         </div>
         <div className="card" style={{ width: "500px", height: "500px" }}>
-        <div className="card-header">
+          <div className="card-header">
             <h3>Graph per customer</h3>
           </div>
           <div
@@ -270,7 +292,22 @@ class Example extends PureComponent {
                 </option>
               ))}
             </select>
-
+            {this.state.selectedUser && (
+              <div style={{ marginBottom: "10px", fontWeight: "bold" }}>
+                Total quantity of shoes ordered : {this.state.totalQuantity}
+                {/* כמות סוגי הנעליים שהוזמנו: {this.state.shoeTypesOrderedCount}{" "} */}
+              </div>
+            )}
+            {/* הצגת כמות סוגי הנעליים */}
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "10px",
+                fontWeight: "bold",
+              }}
+            >
+              {/* כמות סוגי הנעליים שהוזמנו: {filteredOrders.length} */}
+            </div>
             <ComposedChart
               width={500}
               height={400}
@@ -290,7 +327,7 @@ class Example extends PureComponent {
               <Line
                 type="monotone"
                 dataKey="quantity"
-                stroke="red" // כאן תוכל לשנות גם את צבע הגרף השני
+                stroke="red"
                 dot={{ r: 5 }}
               />
               <Bar dataKey="quantity" barSize={20} fill="#413ea0" />

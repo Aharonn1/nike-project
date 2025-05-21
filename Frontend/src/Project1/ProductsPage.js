@@ -52,11 +52,11 @@ function Shop() {
         ...cartItems,
         {
             shoesId: shoe.shoesId,
-            title: shoe.title, // שנה name ל- title
+            title: shoe.title,
             quantity: 1,
             price: shoe.price,
             size: selectedSize?.sizeId,
-            shoppingBasket: 1, // הוסף shoppingBasket
+            shoppingBasket: 1, 
         },
       ]);
     }
@@ -100,7 +100,6 @@ function Shop() {
           );
           if (existingItemIndex !== -1) {
             updatedCartItems[existingItemIndex].shoppingBasket--;
-            // Update total price
             setTotalPrice1(totalPrice1 - shoeId.price); 
           } else {
             updatedCartItems.push({ ...shoeId, shoppingBasket: 1 });

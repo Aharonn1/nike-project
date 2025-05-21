@@ -20,7 +20,6 @@ export default function UsersCard(props) {
     console.log(filtered);
     setFilteredOrders(filtered);
 
-    // עדכון המשתנה totalPrice
     setTotalPrice(totalSum);
     console.log(filtered);
     setFilteredOrders(filtered);
@@ -30,9 +29,8 @@ export default function UsersCard(props) {
     setSearchTerm(event.target.value);
   };
 
-  // פונקציה מתוקנת לספירת הזמנות של לקוח מסונן
   const countOrders = () => {
-    return filteredOrders.length; // ספירת הזמנות במערך המסונן
+    return filteredOrders.length;
   };
 
   return (
@@ -43,9 +41,8 @@ export default function UsersCard(props) {
         placeholder="Search by customer name"
         value={searchTerm}
         onChange={handleSearchChange}
-        className="search-input" // הוספת class עבור עיצוב CSS
+        className="search-input" 
       />
-      {/* הצגת מספר ההזמנות הכולל */}
       <div className="summary">
         <p className="total-orders">Total Orders: {countOrders()}</p>
         <p className="total-price">Total Price: {totalPrice} ₪</p>

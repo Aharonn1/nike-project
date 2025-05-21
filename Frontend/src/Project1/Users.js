@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import dataService from "../Service/DataService";
-import { NavLink } from "react-router-dom";
-import ProductsCard from "./ProductsCard";
+import { useState, useEffect } from "react";
 import UsersCard from "./UsersCard";
 
 export default function Products() {
@@ -21,8 +19,6 @@ export default function Products() {
       setCategories(response1);
       setShoes(response);
       setUsers(response3);
-      // console.log(response2)
-
     };
     fetchData();
   }, []);
@@ -35,9 +31,6 @@ export default function Products() {
   };
 
   const [selectedCategory, setSelectedCategory] = useState("");
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
 
   return (
     <div>

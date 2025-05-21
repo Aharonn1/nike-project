@@ -1,6 +1,6 @@
+import { AuthenticationError } from "../4-models/client-errors";
 import { Request, Response, NextFunction } from "express";
 import cyber from "../2-utils/cyber";
-import { AuthenticationError } from "../4-models/client-errors";
 
 async function verifyAdmin(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {

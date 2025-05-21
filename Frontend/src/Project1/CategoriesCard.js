@@ -41,7 +41,7 @@ function CategoriesCard(props) {
       const updatedCategory = { categoryId: props.category.categoryId, categoryName };
       await dataService.updateCategory(updatedCategory);
       setIsEditing(false); // Update state for immediate UI change
-      props.onCategoryUpdated && props.onCategoryUpdated(updatedCategory); // Call parent function if available
+      // props.onCategoryUpdated && props.onCategoryUpdated(updatedCategory); // Call parent function if available
 
       alert("Category updated successfully.");
     } catch (err) {
@@ -49,12 +49,12 @@ function CategoriesCard(props) {
     }
   }
 
-  useEffect(() => {
-    if (props.categoryDeleted) { // Check for prop from parent (optional)
-      // Handle category deletion in CategoriesCard (optional)
-      console.log("Category deleted:", props.categoryDeleted);
-    }
-  }, [props.categoryDeleted]);
+  // useEffect(() => {
+  //   if (props.categoryDeleted) { // Check for prop from parent (optional)
+  //     // Handle category deletion in CategoriesCard (optional)
+  //     console.log("Category deleted:", props.categoryDeleted);
+  //   }
+  // }, [props.categoryDeleted]);
 
   return (
     <div className="category">

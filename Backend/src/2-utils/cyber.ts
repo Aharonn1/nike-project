@@ -1,9 +1,9 @@
-import crypto from "crypto";
-import { Request } from "express";
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { AuthenticationError } from "../4-models/client-errors";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import UserModel from "../4-models/user-model";
 import RoleModel from "../4-models/role-model";
+import { Request } from "express";
+import crypto from "crypto";
 
 const secretKey = "4578-86 Students Are Amazing!";
 
@@ -47,14 +47,11 @@ function verifyToken(request: Request): Promise<boolean> {
                 return;
             }
 
-
-
             // Verify:
             jwt.verify(token, secretKey, (err: JsonWebTokenError) => {
                 console.log(err);
                 console.log(token);
                 
-
                 if (err) {
                     reject(new AuthenticationError("Invalid token"));
                     return;

@@ -1,13 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
-import imageHandler from "../2-utils/image-handler";
-import ClothingModel from "../4-models/clothing-model";
 import CategoryShoesModel from "../4-models/categoryShoes-model";
-import UserModel from "../4-models/user-model";
-import OrderModel from "../4-models/orders";
-import ShoesModel from "../4-models/shoes-model";
+import imageHandler from "../2-utils/image-handler";
 import tasksService from "../4-models/tasks-service";
-import ShoeSize from "../4-models/orders";
 import CommentModel from "../4-models/commentModel";
+import UserModel from "../4-models/user-model";
+import ShoesModel from "../4-models/shoes-model";
+import OrderModel from "../4-models/orders";
 
 const router = express.Router();
 
@@ -127,23 +125,11 @@ router.post("/shoesUsers1/:userId", async (request: Request, response: Response,
     }
 });
 
-// router.post("/shoesUsers1/:userId", async (request: Request, response: Response, next: NextFunction) => {
-//     try {
-//         const order = new OrderModel(request.body);
-//         const newOrder = await tasksService.buy1(order);
-//         console.log(newOrder)
-//         response.sendStatus(201).json(newOrder);
-//     } catch (err: any) {
-//         next(err);
-//     }
-// });
-
 router.post("/categoryshoes", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        // request.body.image = request.files?.image;
         const category = new CategoryShoesModel(request.body);
-        const addedShoes = await tasksService.addCategory(category);
-        response.status(210).json(addedShoes);
+        const addCategory = await tasksService.addCategory(category);
+        response.status(210).json(addCategory);
     }
     catch (err: any) {
         next(err)
@@ -152,9 +138,9 @@ router.post("/categoryshoes", async (request: Request, response: Response, next:
 
 router.post("/comments", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const comment = new CommentModel(request.body); // יצירת אובייקט תגובה חדש מהגוף של הבקשה
-        const addedComment = await tasksService.addComment(comment); // קריאה לפונקציה בשירות והעברת אובייקט התגובה
-        response.status(201).json(addedComment); // שליחת התגובה שנוספה בחזרה כ-JSON
+        const comment = new CommentModel(request.body);
+        const addedComment = await tasksService.addComment(comment); 
+        response.status(201).json(addedComment);
     } catch (err: any) {
         next(err);
     }
@@ -164,6 +150,8 @@ router.get("/shoesUsers", async (request: Request, response: Response, next: Nex
     try {
         const shoes = await tasksService.getAllShoes();
         response.json(shoes)
+
+        
     }
     catch (err: any) {
         next(err);
@@ -204,16 +192,6 @@ router.get("/categoryshoes", async (request: Request, response: Response, next: 
     try {
         const shoes = await tasksService.getAllCategories();
         response.json(shoes)
-    }
-    catch (err: any) {
-        next(err);
-    }
-});
-
-router.get("/clothing", async (request: Request, response: Response, next: NextFunction) => {
-    try {
-        const clothing = await tasksService.getAllClothing();
-        response.json(clothing)
     }
     catch (err: any) {
         next(err);
@@ -262,39 +240,6 @@ router.get("/ordersUsers/:userId", async (request: Request, response: Response, 
     }
 })
 
-// router.get("/ordersUsers/", async (request: Request, response: Response, next: NextFunction) => {
-//     try {
-//         const userId = +request.params.userId; // או כל שיטה אחרת לקבל userId
-//         const orders = await tasksService.getAllOrdersAndShoesOfUser2(userId);
-//         console.log(orders)
-//         response.json(orders);
-//     } catch (err) {
-//         next(err); // Pass errors to the error handling middleware
-//     }
-// });
-
-// router.get("/ordersUsers/:userId", async (request: Request, response: Response, next: NextFunction) => {
-//     try {
-//         const userId = +request.params.userId;
-//         const orders = await tasksService.getAllOrdersAndShoesOfUser2(userId);
-
-//         // דוגמת סינון - החלף את התנאי בסינון שלך
-//         // const filteredOrders = orders.filter(order => order.status === 0); // לדוגמה, סינון הזמנות עם סטטוס 0
-
-//         // if (filteredOrders.length === 0) {
-//         //     return response.status(404).json({ message: "No orders found to update." }); // או הודעה אחרת
-//         // }
-
-//         // await tasksService.updateOrdersStatusToOne(filteredOrders);
-
-//         response.json(orders); // או response.status(204).send() אם לא רוצים להחזיר מידע
-
-//     } catch (err) {
-//         next(err); // העברת השגיאה ל middleware לטיפול בשגיאות
-//     }
-// });
-
-
 router.put("/ordersUsers/:userId", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const userId = +request.params.userId;
@@ -304,7 +249,6 @@ router.put("/ordersUsers/:userId", async (request: Request, response: Response, 
             return response.status(400).json({ message: "Invalid request body. Expected an array of orders." });
         }
 
-        // בדיקה שכל אובייקט מכיל orderId
         for (const order of ordersToUpdate) {
             if (!order.orderId) {
                 return response.status(400).json({ message: "Invalid request body. Each order must have an orderId." });
@@ -317,7 +261,6 @@ router.put("/ordersUsers/:userId", async (request: Request, response: Response, 
         next(error);
     }
 });
-
 
 router.get("/clothing-per-category/:categoryId", async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -345,19 +288,6 @@ router.post("/shoes", async (request: Request, response: Response, next: NextFun
         const shoes = new ShoesModel(request.body);
         const addedShoes = await tasksService.addShoes(shoes);
         response.status(210).json(addedShoes);
-    }
-    catch (err: any) {
-        next(err);
-    }
-});
-
-router.post("/clothing", async (request: Request, response: Response, next: NextFunction) => {
-    try {
-        request.body.image = request.files?.image;
-        const clothing = new ClothingModel(request.body);
-        const addedClothing = await tasksService.addClothing(clothing);
-        console.log(addedClothing)
-        response.status(210).json(addedClothing);
     }
     catch (err: any) {
         next(err);
@@ -400,8 +330,8 @@ router.put("/categoryshoes/:categoryId([0-9]+)", async (request: Request, respon
     try {
         request.body.categoryId = +request.params.categoryId;
         const category = new CategoryShoesModel(request.body);
-        const updateVacation = await tasksService.updateCategory(category);
-        response.json(updateVacation);
+        const updateCategory = await tasksService.updateCategory(category);
+        response.json(updateCategory);
     }
     catch (err: any) {
         next(err);
@@ -437,8 +367,8 @@ router.put("/shoes/:shoesId([0-9]+)", async (request: Request, response: Respons
     try {
         request.body.shoesId = +request.params.shoesId;
         const shoes = new ShoesModel(request.body);
-        const updateVacation = await tasksService.updateProduct(shoes);
-        response.json(updateVacation);
+        const updateProduct = await tasksService.updateProduct(shoes);
+        response.json(updateProduct);
     }
     catch (err: any) {
         next(err);
@@ -448,8 +378,8 @@ router.put("/shoes/:shoesId([0-9]+)", async (request: Request, response: Respons
 router.get("/categoryshoes/:categoryId([0-9]+)", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const categoryId = +request.params.categoryId;
-        const vacation = await tasksService.getOneCategory(categoryId);
-        response.json(vacation)
+        const category = await tasksService.getOneCategory(categoryId);
+        response.json(category)
     } catch (err: any) {
         next(err)
     }
@@ -470,9 +400,9 @@ router.post("/shoesUsers/favorite/:shoesId", async (request: Request, response: 
 router.delete("/shoesUsers/favorite/:shoesId", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const shoesId = +request.params.shoesId;
-        const userId = request.body.userId; // קבלת userId מגוף הבקשה
+        const userId = request.body.userId;
         await tasksService.unfavorite(userId, shoesId);
-        response.sendStatus(204); // 204 No Content מתאים יותר למחיקה
+        response.sendStatus(204);
     }
     catch (err: any) {
         next(err);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import dataService from "../Service/DataService";
 import { useParams } from "react-router-dom";
 import appConfig from "../Utils/AppConfig";
@@ -7,33 +7,32 @@ import { FaPlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function OneProductsCard(props) {
-  const [shoe, setShoe] = useState(null);
-  const params = useParams();
   const [filteredShoes, setFilteredShoes] = useState(props.shoes);
   const [shoppingBasketCount, setShoppingBasketCount] = useState(0);
-  const [cartItems, setCartItems] = useState([]); // State for cart items
-  const [comments, setComments] = useState([]); // State for cart items
-  const [totalPrice1, setTotalPrice1] = useState(0); // State for total price
-  const [titleName, setTitleName] = useState(""); // State for total price
-  const [isCartUpdated, setIsCartUpdated] = useState(false);
-  const loggedInUser = JSON.parse(localStorage.getItem("user"));
-  const [isLiked, setIsLiked] = useState(false); // state למעקב אחר סטטוס הלייק
-  const [showVideo, setShowVideo] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null); // משתנה מצב חדש
-  const [sizes, setSizes] = useState([]);
-  const [showCart, setShowCart] = useState(false); // State for cart visibility
-  const closeCartRef = useRef(null); // Ref for the close button
-  const playerRef = useRef(null);
-  const [orders, setOrders] = useState([]);
-  const [totalPrice, setTotalPrice] = useState([]);
+  const [lastSelectedSize, setLastSelectedSize] = useState({});
   const [isOrdersUpdated, setIsOrdersUpdated] = useState(false);
+  const loggedInUser = JSON.parse(localStorage.getItem("user"));
+  const [selectedImage, setSelectedImage] = useState(null); // משתנה מצב חדש
+  const [isCartUpdated, setIsCartUpdated] = useState(false);
   const [selectedSizes1, setSelectedSizes1] = useState({}); // אובייקט לשמירת מידות לכל נעל
   const [shoeSizeStock, setShoeSizeStock] = useState({});
-  const [lastSelectedSize, setLastSelectedSize] = useState(null);
-  const [stockData, setStockData] = useState([]);
+  const [showVideo, setShowVideo] = useState(false);
+  const [totalPrice1, setTotalPrice1] = useState(0); // State for total price
   const [stockData1, setStockData1] = useState([]);
+  const [showCart, setShowCart] = useState(false); // State for cart visibility
+  const [totalPrice, setTotalPrice] = useState([]);
+  const [cartItems, setCartItems] = useState([]); // State for cart items
+  const [titleName, setTitleName] = useState(""); // State for total price
+  const [stockData, setStockData] = useState([]);
+  const [isLiked, setIsLiked] = useState(false); // state למעקב אחר סטטוס הלייק
+  const [comments, setComments] = useState([]); // State for cart items
+  const [orders, setOrders] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [shoe, setShoe] = useState(null);
+  const closeCartRef = useRef(null); // Ref for the close button
+  const playerRef = useRef(null);
+  const params = useParams();
   const Basket = 1;
-
   useEffect(() => {
     const fetchShoeData = async () => {
       try {
@@ -44,20 +43,18 @@ function OneProductsCard(props) {
           loggedInUser.userData.userId
         );
         console.log("response2", response2);
-
         const comments = await dataService.getAllComments(
           +(params.shoesId || 0)
         );
         console.log("comments", comments);
-        setComments(comments); // שמירת התגובות במצב
+        setComments(comments);
 
         const stockData1 = await dataService.getAllShoesSizes1();
         console.log("stockData1", stockData1);
-        setStockData1(stockData1);
         const stockData = await dataService.getAllShoesSizes(response.shoesId);
         console.log("stockData", stockData);
         setShoeSizeStock(stockData);
-        setStockData(stockData); // הוספת שורה זו
+        setStockData(stockData);
 
         const filteredOrders = response2.filter(
           (order) =>
@@ -93,26 +90,23 @@ function OneProductsCard(props) {
         setSelectedSizes1(response.shoesId);
         setOrders(filteredOrders);
         setOrders(groupedOrders);
+        setStockData1(stockData1);
+        
       } catch (error) {
         console.error("שגיאה בטעינת נתוני הנעל:", error);
       }
     };
 
     fetchShoeData();
-  }, [params.shoesId, isOrdersUpdated]); // הוספת shoe כתלות
+  }, [params.shoesId, isOrdersUpdated]);
 
   const toggleCart = () => {
     setShowCart(!showCart); // Toggle cart visibility
   };
 
-  const fetchShoes = useCallback(async () => {
-    const shoes = await dataService.getAllShoes();
-    setFilteredShoes(shoes); // Assuming you have a state variable called 'shoes'
-  }, [dataService.getAllShoes]);
-
   const handleMouseEnter = (imageName) => {
     setSelectedImage(imageName);
-    setShowVideo(false); // ודא שהסרטון לא מתנגן כשעוברים לתמונה אחרת
+    setShowVideo(false);
   };
 
   const handleToggleLike = async () => {
@@ -121,11 +115,11 @@ function OneProductsCard(props) {
       if (isLiked) {
         await dataService.removeFavorite(loggedInUser.userData, params.shoesId);
         updatedShoe.total_favorites--;
-        setIsLiked(false); // עדכון isLiked לאחר הסרת הלייק
+        setIsLiked(false);
       } else {
         await dataService.addFavorite(loggedInUser.userData, params.shoesId);
         updatedShoe.total_favorites++;
-        setIsLiked(true); // עדכון isLiked לאחר הוספת הלייק
+        setIsLiked(true);
       }
 
       setShoe(updatedShoe);
@@ -200,7 +194,6 @@ function OneProductsCard(props) {
           );
           if (existingItemIndex !== -1) {
             if (updatedCartItems[existingItemIndex].shoppingBasket > 1) {
-              // updatedCartItems[existingItemIndex].shoppingBasket--;
             } else {
               updatedCartItems.splice(existingItemIndex, 1);
             }
@@ -212,7 +205,6 @@ function OneProductsCard(props) {
           shoe.stock++;
           shoe.bought--;
         }
-        // localShoppingBasket--;
 
         const total = cartItems.reduce(
           (acc, item) => acc + item.price * item.shoppingBasket,
@@ -220,24 +212,13 @@ function OneProductsCard(props) {
         );
 
         setTotalPrice1(total);
-        // if (
-        //   shoe &&
-        //   shoe.shoesId &&
-        //   localShoppingBasket > 0 &&
-        //   cartItems.some((item) => item.shoesId === shoe.shoesId)
-        // ) {
-        //   console.log("shoe.shoesId", shoe.shoesId);
-        //   localShoppingBasket--;
-        // }
 
         setShoe((prevShoe) => ({
           ...prevShoe,
           stock: prevShoe.stock + (Basket > 0 && updateStock === 1 ? 1 : 0),
           bought: prevShoe.bought - (Basket > 0 && updateStock === 1 ? 1 : 0),
-          // shoppingBasket: localShoppingBasket,
         }));
 
-        // setShoppingBasketCount(shoppingBasketCount + 1);
         setOrders((prevOrders) =>
           prevOrders.filter((order) => order.orderId !== orderId)
         );
@@ -285,6 +266,7 @@ function OneProductsCard(props) {
     console.log("updateStock", updateStock);
     const shoesId = shoe.shoesId;
     const quantity = 1;
+
     let localShoppingBasket = shoe.shoppingBasket ? shoe.shoppingBasket : 0;
 
     try {
@@ -298,29 +280,27 @@ function OneProductsCard(props) {
       console.log("filteredOrders:", filteredOrders);
 
       if (isFromCart) {
-        setSelectedSizes1((prevSizes) => ({
+        setLastSelectedSize((prevSizes) => ({
           ...prevSizes,
           [shoe.shoesId]: shoe.sizeId,
         }));
       }
 
-      // חיפוש הזמנה קיימת לפי shoesId בלבד
       const existingItemIndex = filteredOrders.findIndex(
-        (item) => item.shoesId === shoe.shoesId
+        (item) => item.shoesId === shoe.shoesId 
       );
-
+      console.log("existingItemIndex" , existingItemIndex)
       let sizeIdToUse;
 
       if (existingItemIndex !== -1) {
-        // המוצר כבר קיים בסל, קח את ה sizeId מההזמנה הקיימת
         sizeIdToUse = filteredOrders[existingItemIndex].sizeId;
+        console.log("sizeIdToUse" , sizeIdToUse)
         console.log("מידה מהסל:", sizeIdToUse);
       } else {
-        // מוצר חדש, קח את ה sizeId מ selectedSizes1 או מ shoe.sizeId
         sizeIdToUse = selectedSizes1[shoe.shoesId] || shoe.sizeId;
         console.log("מידה חדשה:", sizeIdToUse);
       }
-
+      
       const selectedSizeStock =
         stockData1.find(
           (item) => item.sizeId === sizeIdToUse && item.shoesId === shoesId
@@ -354,10 +334,10 @@ function OneProductsCard(props) {
         console.log("response1", response1);
       }
 
-      const updatedCartItems = [...cartItems, shoe]; // הוספת הפריט החדש למערך
+      const updatedCartItems = [...cartItems, shoe];
       console.log("updatedCartItems", updatedCartItems);
 
-      setCartItems(updatedCartItems); // עדכון cartItems עם המערך החדש
+      setCartItems(updatedCartItems);
       localShoppingBasket++;
 
       setShoe((prevShoe) => ({
@@ -366,7 +346,7 @@ function OneProductsCard(props) {
       }));
 
       setShoppingBasketCount(shoppingBasketCount + 1);
-      setCartItems(updatedCartItems); // עדכון נוסף של cartItems (כנראה מיותר)
+      setCartItems(updatedCartItems);
       console.log("updatedCartItems", updatedCartItems);
       const total = updatedCartItems.reduce(
         (acc, item) => acc + item.price * item.shoppingBasket,
@@ -380,6 +360,7 @@ function OneProductsCard(props) {
       setTitleName(titleName);
       setTotalPrice1(total);
       setIsCartUpdated(true);
+      // setStockData1(stockData1);
     } catch (error) {
       console.error("שגיאה:", error);
     }
@@ -673,7 +654,6 @@ function OneProductsCard(props) {
                   </div>
                 </div>
               ))}
-              <br />
               <p className="totalPrice">
                 Total Price : {totalPrice} ₪
                 <br />
@@ -682,7 +662,7 @@ function OneProductsCard(props) {
               </p>
               <br />
               <Link to="/creditCardForm">
-                <button className="buy">Buy</button>
+                <button className="buy1">Buy</button>
               </Link>
             </div>
           ) : (

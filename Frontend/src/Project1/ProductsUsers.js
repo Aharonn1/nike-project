@@ -4,6 +4,7 @@ import ProductUserCard from "./ProductsUsersCard";
 import { useParams } from "react-router-dom";
 import appConfig from "../Utils/AppConfig";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Products() {
   const [shoes, setShoes] = useState([]);
@@ -42,7 +43,6 @@ export default function Products() {
         const response3 = await dataService.getAllCategories();
         const response4 = await dataService.getAllShoes();
         const response = await dataService.getShoeById(+(params.shoesId || 0));
-        // const response2 = await dataService.getAllOrders();
         const stockData1 = await dataService.getAllShoesSizes1();
         const response2 = await dataService.getAllOrders2(
           loggedInUser.userData.userId
@@ -81,7 +81,6 @@ export default function Products() {
         console.log("filteredOrders", filteredOrders);
         setTotalPrice(totalPrice);
         setSizes(response1);
-        const updatedCartItems = [...filteredOrders];
         console.log(response1);
         setCategories(response3);
         setShoe(response);
@@ -149,22 +148,54 @@ export default function Products() {
     setShoes(response);
   };
 
-  const search = () => {
-    const findShoes =
-      Array.isArray(shoes) && shoes.length > 0
-        ? shoes.filter((s) =>
-            s.title.toLowerCase().includes(text.toLowerCase())
-          )
-        : []; // החזרת מערך ריק אם shoes לא מערך או ריק
-    setShoes(findShoes);
-    setFilteredShoes(findShoes);
-    if (text === "") {
-      setShoes(shoes.length);
-    } else {
-      setShoes(shoes.length);
-      // בדיקה האם shoes הוא מערך ולא ריק
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedShoe, setSelectedShoe] = useState(null); // מצב חדש עבור הנעל שנבחרה
+
+  const handleSuggestionClick = (shoeTitle) => {
+    setText(shoeTitle); // מלא את תיבת הטקסט בהצעה שנבחרה
+    setFilteredShoes([]); // סגור את רשימת ההצעות
+    setShowSuggestions(false);
+    setSelectedShoe(null); // איפוס הבחירה כשאין טקסט
+
+    // כאן תוכל לבצע פעולה נוספת אם תרצה, כמו ניווט לדף המוצר
+  };
+
+  // const search = (currentText) => {
+  //   setText(currentText); // עדכון הטקסט שהמשתמש הקליד
+  //   // if (currentText.trim() === '') {
+  //   //   setFilteredShoes([]); // אם הטקסט ריק, אל תציג הצעות
+  //   //   setShowSuggestions(false);
+  //   //   return;
+  //   // }
+
+  //   const findShoes = shoes.filter((s) =>
+  //     s.title.toLowerCase().startsWith(currentText)
+  //   );
+  //   setFilteredShoes(findShoes);
+  //   setShowSuggestions(findShoes.length > 0); // הצג הצעות רק אם יש תוצאות
+  //   setSelectedShoe(null); // איפוס הבחירה בחיפוש חדש
+  // };
+
+  const search = (currentText) => {
+    setText(currentText);
+    if (currentText.trim() === '') {
+      setFilteredShoes(shoes);
+      setShowSuggestions(false);
+      return;
     }
-    setShoes(shoes);
+
+    const findShoes = shoes.filter((s) =>
+      s.title.toLowerCase().startsWith(currentText.toLowerCase())
+    );
+    setFilteredShoes(findShoes);
+    setShowSuggestions(findShoes.length > 0);
+  };
+
+  const handleClearClick = () => {
+    setText("");
+    setFilteredShoes(shoes);
+    setShowSuggestions(false);
+    setSelectedShoe(null); // איפוס הבחירה בלחיצה על Clear
   };
 
   async function deleteOrder(shoe, orderId) {
@@ -316,9 +347,7 @@ export default function Products() {
         stockData1.find(
           (item) => item.sizeId === sizeIdToUse && item.shoesId === shoesId
         )?.stock || 0;
-      //   const selectedSizeStock = stockData1.find(
-      //     (item) => item.shoesId === shoesId && item.sizeId === sizeIdToUse
-      // )?.stock || 0;
+
       console.log("selectedSizeStock", selectedSizeStock);
       if (selectedSizeStock === 0) {
         alert("אין מספיק מלאי עבור מידה זו.");
@@ -345,7 +374,7 @@ export default function Products() {
           userId,
           shoesId,
           quantity,
-          sizeIdToUse // <--  שלח את sizeIdToUse עם ההזמנה
+          sizeIdToUse
         );
         console.log("response", response);
         await dataService.getAllShoes();
@@ -354,7 +383,7 @@ export default function Products() {
           userId,
           shoesId,
           quantity,
-          sizeIdToUse // <--  שלח את sizeIdToUse עם ההזמנה
+          sizeIdToUse
         );
         console.log("response1", response1);
       }
@@ -427,25 +456,40 @@ export default function Products() {
           ))}
         </select>
 
-        <input
-          className="qqq"
-          type="text"
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value); // עדכון ה-state עם הטקסט החדש
-            search(); // קריאה לפונקציית החיפוש
-          }}
-        />
-
-        <button
-          className="ddd"
-          onClick={() => {
-            setText("");
-            search(); // קריאה לפונקציית החיפוש
-          }}
-        >
-          Clear
-        </button>
+        <div className="search-container">
+          <input
+            className="qqq"
+            type="text"
+            value={text}
+            onChange={(e) => search(e.target.value)}
+            placeholder=" Search shoes..."
+            onFocus={() =>
+              setShowSuggestions(filteredShoes.length > 0 && text.trim() !== "")
+            }
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+          />
+          {showSuggestions && (
+            <div className="suggestions-box">
+              {filteredShoes.map((shoe) => (
+                <Link
+                  to={`/shoesUsers/${shoe.shoesId}`}
+                >
+                  <div className="suggestion-item">
+                    {shoe.title}
+                  </div>
+                </Link>
+              ))}
+              {filteredShoes.length === 0 && text.trim() !== "" && (
+                <div className="suggestion-item no-results">
+                  לא נמצאו תוצאות
+                </div>
+              )}
+            </div>
+          )}
+          <button className="ddd" onClick={handleClearClick}>
+            Clear
+          </button>        
+        </div>
       </div>
 
       <div className="sliderValue">
@@ -463,9 +507,8 @@ export default function Products() {
       <br />
       <div className="range" style={{ marginLeft: "80px" }}>
         {" "}
-        {/* הוספת marginLeft */}
         <div className="filed">
-          <div className="value-left">0 ₪</div> {/* הוספת הסימן ₪ */}
+          <div className="value-left">0 ₪</div>
           <input
             type="range"
             min="0"
@@ -474,7 +517,7 @@ export default function Products() {
             steps="1"
             onChange={handleSliderChange}
           />
-          <div className="value-right">1000 ₪</div> {/* הוספת הסימן ₪ */}
+          <div className="value-right">1000 ₪</div>
         </div>
       </div>
       <br />
@@ -487,18 +530,18 @@ export default function Products() {
         orders={orders}
         lastOrder={lastOrder}
         selectedCategory={selectedCategory}
-        filteredShoes={filteredShoes} // העבר את filteredShoes המעודכן
-        handleAddToCartSuccess={handleAddToCartSuccess} // (אופציונלי)
+        filteredShoes={filteredShoes}
+        handleAddToCartSuccess={handleAddToCartSuccess}
       />
 
       {showCart && (
-        <div className="cartTab1">
-          <h1>Shopping Cart</h1>
-          {orders.length > 0 ? ( // השתמש ב- orders
+        <div className={`cartTab1 ${showCart ? 'active' : ''}`}>
+        <h1>Shopping Cart</h1>
+          {orders.length > 0 ? (
             <div className="listCart">
               {orders.map((cartItem, index) => (
                 <div
-                  key={`${cartItem.sizeId}-${cartItem.sizeId}-${index}`} // הוספנו index למפתח
+                  key={`${cartItem.sizeId}-${cartItem.sizeId}-${index}`}
                   className="cartItem2"
                 >
                   <br />
@@ -507,13 +550,11 @@ export default function Products() {
                     <div className="quantity">
                       Quantity: {cartItem.quantity}
                     </div>{" "}
-                    {/* <-- הצג את הכמות */}
                     <div className="size">Size: {cartItem.sizeId}</div>
                     <div className="price">Price: {cartItem.price}</div>
                   </div>
                   <Link to={`/shoesUsers/${cartItem.shoesId}`}>
                     {" "}
-                    {/* שנה את הנתיב לפי הצורך */}
                     <img
                       src={appConfig.shoesImagesUsersUrl + cartItem.imageName}
                     />
@@ -532,10 +573,10 @@ export default function Products() {
               ))}
               <br />
               <p className="totalPrice">
-                Total Price : {totalPrice} ₪
-                <br />
                 Total Shoes :{" "}
                 {orders.reduce((sum, order) => sum + order.quantity, 0)}
+                <br />
+                Total Price : {totalPrice} ₪
               </p>
               <br />
 

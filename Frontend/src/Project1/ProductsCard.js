@@ -4,7 +4,6 @@ import appConfig from "../Utils/AppConfig";
 
 function ProductsCard(props) {
   const filteredShoes = props.filterProducts(props.selectedCategory);
-
   const [editingProductId, setEditingProductId] = useState(null);
   const [editedProductValues, setEditedProductValues] = useState({});
 
@@ -78,12 +77,10 @@ function ProductsCard(props) {
                   </ul>
                 )}
               </div>
-              {/* Edit button - Always visible */}
               <button onClick={() => handleEditClick(shoe.shoesId)}>
                 {editingProductId === shoe.shoesId ? "Cancel edit" : "Edit"}
               </button>
 
-              {/* Edit form - Initially hidden */}
               {editingProductId === shoe.shoesId && (
                 <div className="edit-form">
                   <input

@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import CredentialsModel from "../4-models/credentials-model";
-import UserModel from "../4-models/user-model";
 import authService from "../5-services/auth-service";
+import UserModel from "../4-models/user-model";
 
 const router = express.Router(); // Capital R
 
@@ -18,18 +18,6 @@ router.post("/auth/register", async (request: Request, response: Response, next:
     }
 })
 
-// POST http://localhost:4000/api/auth/register
-// router.post("/auth/login", async (request: Request, response: Response, next: NextFunction) => {
-//     try {
-//         const credentials = new CredentialsModel(request.body);
-//         const token = await authService.login(credentials);
-//         response.json(token);
-//     }
-//     catch (err: any) {
-//         next(err);
-//     }
-// })
-
 router.post("/auth/login", async (request: Request, response: Response, next: NextFunction) => {
     try {
       const credentials = new CredentialsModel(request.body);
@@ -42,6 +30,5 @@ router.post("/auth/login", async (request: Request, response: Response, next: Ne
       next(err);
     }
   });
-
 
 export default router;

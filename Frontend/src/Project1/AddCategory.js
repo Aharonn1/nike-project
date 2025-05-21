@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import dataService from "../Service/DataService";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 function AddCategory(){
 
-    const [category,setCategory] = useState();
     const{register,handleSubmit} = useForm();
     const navigate = useNavigate();
 

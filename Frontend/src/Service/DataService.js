@@ -1,5 +1,5 @@
-import axios from "axios";
 import appConfig from "../Utils/AppConfig";
+import axios from "axios";
 
 const dataService = {
   async getAllShoes() {
@@ -26,7 +26,7 @@ const dataService = {
 
   async getAllShoesSizes(shoesId) {
     try {
-      const response = await axios.get(`${appConfig.shoeSizeUrl + shoesId}`); // הוספת shoesId ל-URL
+      const response = await axios.get(`${appConfig.shoeSizeUrl + shoesId}`);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -37,7 +37,7 @@ const dataService = {
 
   async getAllShoesSizes1() {
     try {
-      const response = await axios.get(`${appConfig.shoesUsersUrl2}`); // הוספת shoesId ל-URL
+      const response = await axios.get(`${appConfig.shoesUsersUrl2}`);
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -73,18 +73,15 @@ const dataService = {
       const response = await axios.get(`${appConfig.shoesUsersUrl + shoes}`);
       console.log("response.data", response.data); // הוספנו הדפסה של כל ה- response
 
-      // בדוק אם הבקשה הצליחה (טווח סטטוסים רחב יותר)
       if (response.status >= 200 && response.status < 300) {
-        return response.data; // החזר את נתוני הנעל
+        return response.data;
       } else {
-        // טיפול בשגיאה - למשל, הצג הודעה למשתמש
         const errorMessage = `Failed to fetch shoe: ${response.status} - ${response.statusText}`;
         console.error(errorMessage);
         throw new Error(errorMessage);
       }
     } catch (error) {
       console.error("Error fetching shoe:", error);
-      // התאם את הטיפול בשגיאה
       return null;
     }
   },
@@ -138,17 +135,6 @@ const dataService = {
     }
   },
 
-  // async getAllOrders3() {
-  //   try {
-  //     const response = await axios.get(appConfig.ordersUserUrl);
-  //     console.log(response.data);
-  //     return response.data;
-  //   } catch (err) {
-  //     console.error("Error fetching shoes:", err);
-  //     return []; // Handle errors gracefully, consider returning an empty array
-  //   }
-  // },
-
   async getAllOrders2(userId) {
     try {
       const response = await fetch(`${appConfig.ordersUserUrl}${userId}`);
@@ -156,95 +142,37 @@ const dataService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const orders = await response.json();
-      console.log("getAllOrdersAndShoesOfUser" , orders)
+      console.log("getAllOrdersAndShoesOfUser", orders);
       return orders;
     } catch (error) {
       console.error("Error fetching orders:", error);
-      throw error; // חשוב לזרוק את השגיאה כדי שהקומפוננט יוכל לטפל בה
+      throw error; 
     }
   },
 
-  // async getAllOrders3() {
-  //   try {
-  //     const response = await fetch(`${appConfig.orders3Url}`);
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-  //     const orders = await response.json();
-  //     console.log("getAllOrdersAndShoesOfUser" , orders)
-  //     return orders;
-  //   } catch (error) {
-  //     console.error("Error fetching orders:", error);
-  //     throw error; // חשוב לזרוק את השגיאה כדי שהקומפוננט יוכל לטפל בה
-  //   }
-  // },
-  async updateOrdersStatus(orderIds, userId) { // הוספת userId כפרמטר
+  async updateOrdersStatus(orderIds, userId) {
     try {
-        console.log("userId:", userId); // or
-        console.log("orderIds:", orderIds); // בדיקה
+      console.log("userId:", userId); // or
+      console.log("orderIds:", orderIds); // בדיקה
 
-        if (!userId) { // טיפול במקרה שuserId undefined
-            throw new Error("User ID is undefined.");
-        }
+      if (!userId) {
+        throw new Error("User ID is undefined.");
+      }
 
-        const ordersToUpdate = orderIds.map(orderId => ({ orderId }));
+      const ordersToUpdate = orderIds.map((orderId) => ({ orderId }));
 
-        const response = await fetch(`${appConfig.ordersUserUrl}${userId}`, { // תיקון ה URL
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(ordersToUpdate)
-        });
-
-        //... (שאר הקוד)
+      const response = await fetch(`${appConfig.ordersUserUrl}${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ordersToUpdate),
+      });
     } catch (error) {
-        console.error("Error updating order status:", error);
-        throw error;
+      console.error("Error updating order status:", error);
+      throw error;
     }
-},
-
-
-  // async  getAllOrdersAndShoesOfUser(userId) {
-  //   try {
-  //     const response = await fetch(`${appConfig.ordersUserUrl}${userId}`);
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-  //     const orders = await response.json();
-  //     console.log("getAllOrdersAndShoesOfUser" , orders)
-  //     return orders;
-  //   } catch (error) {
-  //     console.error("Error fetching orders:", error);
-  //     throw error; // חשוב לזרוק את השגיאה כדי שהקומפוננט יוכל לטפל בה
-  //   }
-  // },
-  
-  // async  updateOrdersStatusToOne(orders) {
-  //   try {
-  //     const response = await fetch(`${appConfig.ordersUserUrl}${orders[0].userId}`, { // Use the same URL with userId
-  //       method: "GET", // Or POST, depending on your API
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       // If you're using POST, include the orders in the body
-  //       // body: JSON.stringify(orders), 
-  //     });
-  //     console.log(response.data)
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-  
-  //     const updatedOrders = await response.json(); // Get the updated orders if needed
-  //     console.log("updatedOrders" , updatedOrders)
-  //     return updatedOrders;
-  
-  //   } catch (error) {
-  //     console.error("Error updating order status:", error);
-  //     throw error;
-  //   }
-  // },
-  
+  },
 
   async getLastOrder() {
     const allOrders = await this.getAllOrders2();
@@ -326,8 +254,6 @@ const dataService = {
     }
   },
 
-
-  
   async updateProduct(updatedProduct) {
     const headers = { "Content-Type": "application/json" }; // Assuming JSON data
 
@@ -396,13 +322,8 @@ const dataService = {
     return response.data; // Newly created user object
   },
 
-  // ... קוד קיים ...
-
   async handleOrder(userId, shoesId, quantity, sizeId) {
-    // הסרת orderDate כפרמטר
     try {
-      // const orderDate = new Date();
-      // const formattedDate = orderDate.toISOString();
       const response = await axios.post(appConfig.shoesUsersUrl + `${userId}`, {
         userId,
         shoesId,
@@ -413,23 +334,18 @@ const dataService = {
       console.log("response.data", response.data);
       console.log("הזמנה הוגשה בהצלחה");
     } catch (error) {
-      // הוספת טיפוס any לשגיאה
       console.error("Error adding order:", error.message);
-      // טיפול בשגיאות - לדוגמה, הצגת הודעת שגיאה למשתמש
       if (error.response) {
         alert(`שגיאה מהשרת: ${error.response.data}`);
       } else {
         alert("שגיאה בהוספת הזמנה");
       }
     } finally {
-      // הוספת finally
       await this.getAllShoes();
     }
   },
-  // ... קוד קיים ...
 
   async handleOrder1(userId, shoesId, quantity, orderDate) {
-    // this.getAllShoes();
     try {
       const orderDate = new Date();
       const formattedDate = orderDate.toISOString();
@@ -445,8 +361,7 @@ const dataService = {
       console.log(response);
       console.log("הזמנה הוגשה בהצלחה");
 
-      // קריאה לפונקציית getAllShoes לאחר הזמנה מוצלחת
-      await this.getAllShoes(); // וודא שפונקציית getAllShoes מעדכנת את המצב המקומי (למשל, filteredShoes)
+      await this.getAllShoes();
     } catch (error) {
       console.error("Error adding order:", error.message);
     }
@@ -454,37 +369,39 @@ const dataService = {
 
   async addComment(comment) {
     try {
-        const response = await axios.post(`${appConfig.commentsUrl}`, comment, { headers: { 'Content-Type': 'application/json' } });
-        console.log("response.data", response.data);
-        console.log("תגובה נוספה בהצלחה");
-        return response.data; // החזרת התגובה שנוספה מה-back-end
+      const response = await axios.post(`${appConfig.commentsUrl}`, comment, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("response.data", response.data);
+      console.log("תגובה נוספה בהצלחה");
+      return response.data;
     } catch (error) {
-        console.error("Error adding comment:", error.message);
-        if (error.response) {
-            alert(`שגיאה מהשרת: ${error.response.data}`);
-        } else {
-            alert("שגיאה בהוספת תגובה");
-        }
-        throw error; // העברת השגיאה למקום שקרא לפונקציה
+      console.error("Error adding comment:", error.message);
+      if (error.response) {
+        alert(`שגיאה מהשרת: ${error.response.data}`);
+      } else {
+        alert("שגיאה בהוספת תגובה");
+      }
+      throw error;
     }
-},
+  },
 
-async getAllComments(shoesId) {
-  try {
+  async getAllComments(shoesId) {
+    try {
       const response = await axios.get(`${appConfig.commentsUrl}${shoesId}`);
       console.log("response.data", response.data);
       console.log("תגובות נטענו בהצלחה");
-      return response.data; // החזרת מערך התגובות מה-back-end
-  } catch (error) {
+      return response.data;
+    } catch (error) {
       console.error("Error getting comments:", error.message);
       if (error.response) {
-          alert(`שגיאה מהשרת: ${error.response.data}`);
+        alert(`שגיאה מהשרת: ${error.response.data}`);
       } else {
-          alert("שגיאה בטעינת תגובות");
+        alert("שגיאה בטעינת תגובות");
       }
-      throw error; // העברת השגיאה למקום שקרא לפונקציה
-  }
-},
+      throw error; 
+    }
+  },
 
   async updateUser(updateUser) {
     const headers = { "Content-Type": "application/json" }; // Assuming JSON data
@@ -549,14 +466,11 @@ async getAllComments(shoesId) {
         { userId }
       );
       if (response.status === 200) {
-        // שינוי סטטוס הקוד
         console.log("הלייק נוסף בהצלחה");
-        // ...
       } else {
         console.error("שגיאה בהוספת לייק");
-        // טיפול שגיאות ספציפי (אופציונלי)
         if (response.data.message) {
-          alert(response.data.message); // הצגת הודעת שגיאה מהשרת
+          alert(response.data.message); 
         }
       }
     } catch (error) {
@@ -564,16 +478,14 @@ async getAllComments(shoesId) {
     }
   },
 
-  // פונקציה להסרת לייק
   async removeFavorite(userId, shoesId) {
     try {
       const response = await axios.delete(
         `${appConfig.shoesUsersFavoriteUrl}${shoesId}`,
         { data: { userId: userId.userId } }
-      ); // שליחת userId בלבד
+      );
       if (response.status === 204) {
         console.log("הלייק הוסר בהצלחה");
-        // ...
       } else {
         console.error("שגיאה בהסרת לייק");
       }

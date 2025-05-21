@@ -3,11 +3,12 @@ import dal from "../2-utils/dal";
 import { ResourceNotFoundError } from "./client-errors";
 import imageHandler from "../2-utils/image-handler";
 import CategoryShoesModel from "./categoryShoes-model";
-import ClothingModel from "./clothing-model";
+// import ClothingModel from "./clothing-model";
 import OrderModel from "./orders";
 import UserModel from "./user-model";
 import FavoriteModel from "./favoriteModel";
 import ShoesModel from "./shoes-model";
+import Size from "./size-model";
 import SizeModel from "./size-model";
 import ImagesModel from "./images";
 import CommentModel from "./commentModel";
@@ -62,6 +63,7 @@ async function getAllUsers(): Promise<ShoesModel> {
    SELECT DISTINCT
     u.firstName,
     u.lastName,
+    u.email,
     u.registrationDate,
     o.userId, 
     o.shoesId, 
@@ -69,15 +71,17 @@ async function getAllUsers(): Promise<ShoesModel> {
     SUM(o.quantity) AS total_quantity,
     o.status,
     s.price  -- הוספת המחיר
-    FROM 
+FROM 
     orders o
-    INNER JOIN 
+INNER JOIN 
     users u ON o.userId = u.userId
-    INNER JOIN  -- הוספת join לטבלת shoes
+INNER JOIN  -- הוספת join לטבלת shoes
     shoes s ON o.shoesId = s.shoesId
-    WHERE o.status = 1
-    GROUP BY 
-    u.firstName, u.lastName, u.registrationDate, o.userId, o.shoesId, DATE(o.orderDate), o.status, s.price  -- הוספת s.price ל group by
+WHERE o.status = 1
+GROUP BY 
+    u.firstName, u.lastName, u.registrationDate, o.userId, o.shoesId, DATE(o.orderDate), o.status, s.price 
+    ORDER BY
+    order_date DESC  -- הוספת s.price ל group by
 `;
     const tasks = await dal.execute(sql);
     return tasks;
@@ -111,7 +115,6 @@ async function getUserAccount(user: UserModel): Promise<UserModel> {
 //         console.error('Error adding order:', error);
 //     }
 // }
-
 
 async function buyOrder(order: OrderModel): Promise<void> {
     try {
@@ -228,116 +231,108 @@ async function unBuy(userId: number, shoesId: number, quantity: number): Promise
 }
 
 async function getAllOrders(): Promise<OrderModel[]> {
-    const sql = `
-        SELECT
-            u.firstName AS customer_name,
-            u.lastName AS customer_last_name,
-            u.registrationDate,
-            o.userId,
-            o.shoesId,
-            p.categoryId, 
-            c.categoryName,
-            p.imageName,
-            p.title,
-            DATE(o.orderDate) AS order_date,
-            SUM(o.quantity) AS total_quantity
-        FROM
-            orders o
-        JOIN users u ON o.userId = u.userId
-        JOIN shoes p ON o.shoesId = p.shoesId
-        JOIN categoryshoes c ON p.categoryId = c.categoryId
-        GROUP BY
-            u.firstName, u.lastName, u.registrationDate, o.userId, o.shoesId, p.categoryId, c.categoryName, p.imageName, DATE(o.orderDate)
-    `;
-    const orders = await dal.execute(sql);
+    const sql = `SELECT
+    u.firstName AS customer_name,
+    u.lastName AS customer_last_name,
+    u.registrationDate,
+    o.userId,
+    o.shoesId,
+    p.categoryId, 
+    c.categoryName,
+    p.title,
+    p.imageName, -- הוספנו את שם התמונה
+    DATE(o.orderDate) AS order_date,
+    SUM(o.quantity) AS total_quantity
+    FROM
+    orders o
+    JOIN users u ON o.userId = u.userId
+    JOIN shoes p ON o.shoesId = p.shoesId
+    JOIN categoryshoes c ON p.categoryId = c.categoryId
+    GROUP BY
+    u.firstName, u.lastName, u.registrationDate, o.userId, o.shoesId, p.categoryId, c.categoryName, p.imageName, DATE(o.orderDate)`;
+    const orders = await dal.execute(sql)
     return orders;
 }
+
 // async function getAllOrdersAndShoesOfUser(): Promise<OrderModel[]> {
 //     const sql1 = "SELECT s.title, s.price, o.quantity, o.orderDate,o.sizeId, o.orderId, o.userId, o.shoesId, o.status, (s.price * o.quantity) AS totalPrice FROM shoes s INNER JOIN orders o ON s.shoesId = o.shoesId";
 //     const orders = await dal.execute(sql1);
 //     return orders;
 // }
 async function getAllOrdersAndShoesOfUser(userId: number): Promise<OrderModel[]> {
-    const sql = `
-        SELECT
-            s.title,
-            s.price,
-            s.imageName,
-            o.quantity,
-            o.orderDate,
-            o.sizeId,
-            o.orderId,
-            o.userId,
-            o.shoesId,
-            o.orderStatus,
-            o.status,
-            (s.price * o.quantity) AS itemPrice
-        FROM
-            shoes s
-        INNER JOIN
-            orders o ON s.shoesId = o.shoesId
-        WHERE
-            o.userId = ?
-    `;
+    const sql = `SELECT 
+    s.title, 
+    s.price,
+    s.imageName, 
+    o.quantity, 
+    o.orderDate,
+    o.sizeId, 
+    o.orderId, 
+    o.userId, 
+    o.shoesId, 
+    o.status, 
+    (s.price * o.quantity) AS itemPrice -- חישוב מחיר פריט בודד
+FROM 
+    shoes s 
+INNER JOIN 
+    orders o ON s.shoesId = o.shoesId
+    ORDER BY orderDate DESC`;
 
-    const orders = await dal.execute(sql, [userId]);
+    const orders = await dal.execute(sql);
+    
+    // for (const order of orders) {
+    //     if (order.orderStatus === order.Pending) {
+    //         const orderDate = new Date(order.orderDate);
+    //         const currentDate = new Date();
 
-    for (const order of orders) {
-        if (order.orderStatus === "Pending") {
-            const orderDate = new Date(order.orderDate);
-            const currentDate = new Date();
+    //         const threeDaysAgo = new Date(currentDate);
+    //         threeDaysAgo.setDate(currentDate.getDate() - 3);
 
-            const threeDaysAgo = new Date(currentDate);
-            threeDaysAgo.setDate(currentDate.getDate() - 3);
+    //         if (orderDate <= threeDaysAgo) {
+    //             const updateSql = `
+    //                 UPDATE orders
+    //                 SET orderStatus = ?
+    //                 WHERE orderId = ?
+    //             `;
+    //             await dal.execute(updateSql, order.Completed, order.orderId);
+    //             order.orderStatus = order.Completed;
+    //             console.log(`הזמנה ${order.orderId} עודכנה ל-Completed.`);
+    //         } else {
+    //             console.log(`הזמנה ${order.orderId} עדיין לא עברה 3 ימים מאז יצירתה.`);
+    //         }
+    //     }
+    // }
 
-            // בדיקה אם עברו 3 ימים
-            if (orderDate <= threeDaysAgo) {
-                // עדכון סטטוס ל-Completed
-                const updateSql = `
-                    UPDATE orders
-                    SET orderStatus = 'Completed'
-                    WHERE orderId = ?
-                `;
-                await dal.execute(updateSql, [order.orderId]); // הנח ש dal קיים
-                order.orderStatus = "Completed"; // עדכון סטטוס גם בזיכרון.
-                console.log(`הזמנה ${order.orderId} עודכנה ל-Completed.`);
-            } else{
-                 console.log(`הזמנה ${order.orderId} עדיין לא עברה 3 ימים מאז יצירתה.`);
-            }
-        }
-    }
-    for (const order of orders) {
-        if (order.orderStatus === "Completed") {
-            const orderDate = new Date(order.orderDate);
-            const currentDate = new Date();
+    // for (const order of orders) {
+    //     if (order.orderStatus === order.Completed) {
+    //         const orderDate = new Date(order.orderDate);
+    //         const currentDate = new Date();
 
-            const threeDaysAgo = new Date(currentDate);
-            threeDaysAgo.setDate(currentDate.getDate() - 3);
+    //         const threeDaysAgo = new Date(currentDate);
+    //         threeDaysAgo.setDate(currentDate.getDate() - 3);
 
-            // בדיקה אם תאריך ההזמנה גדול מתאריך לפני שלושה ימים, כלומר עדיין לא עברו 3 ימים
-            if (orderDate > threeDaysAgo) {
-                // שינוי הסטטוס ל-Pending במקום הדפסה
-                const updateSql = `
-                    UPDATE orders
-                    SET orderStatus = 'Pending'
-                    WHERE orderId = ?
-                `;
-                await dal.execute(updateSql, [order.orderId]);
-                order.orderStatus = "Pending";
-            }
-            // בדיקה אם תאריך ההזמנה קטן או שווה לתאריך לפני שלושה ימים
-            if (orderDate <= threeDaysAgo) {
-                console.log("orderDate" , orderDate)
-                const updateCompletedSql = `
-                    UPDATE orders
-                    SET orderStatus = 'Completed'
-                    WHERE orderId = ?
-                `;
-                await dal.execute(updateCompletedSql, [order.orderId]);
-                order.orderStatus = "Completed";
-            }
-        }
-    }
+    //         if (orderDate > threeDaysAgo) {
+    //             const updateSql = `
+    //                 UPDATE orders
+    //                 SET orderStatus = ?
+    //                 WHERE orderId = ?
+    //             `;
+    //             await dal.execute(updateSql, order.Pending, order.orderId);
+    //             order.orderStatus = order.Pending;
+    //         }
+
+    //         if (orderDate <= threeDaysAgo) {
+    //             console.log("orderDate", orderDate);
+    //             const updateCompletedSql = `
+    //                 UPDATE orders
+    //                 SET orderStatus = ?
+    //                 WHERE orderId = ?
+    //             `;
+    //             await dal.execute(updateCompletedSql, order.Completed, order.orderId);
+    //             order.orderStatus = order.Completed;
+    //         }
+    //     }
+    // }
     return orders;
 }
 
@@ -520,20 +515,20 @@ async function addCategory(category: CategoryShoesModel): Promise<CategoryShoesM
     return category;
 }
 
-export async function addClothing(clothing: ClothingModel): Promise<ClothingModel> {
+// export async function addClothing(clothing: ClothingModel): Promise<ClothingModel> {
 
-    clothing.imageName = await imageHandler.saveImage(clothing.image);
+//     clothing.imageName = await imageHandler.saveImage(clothing.image);
 
-    const sql = "INSERT INTO clothing VALUES(DEFAULT,?,?,?,?,?)";
+//     const sql = "INSERT INTO clothing VALUES(DEFAULT,?,?,?,?,?)";
 
-    const result: OkPacket = await dal.execute(sql, clothing.categoryId, clothing.description, clothing.price, clothing.title, clothing.imageName);
+//     const result: OkPacket = await dal.execute(sql, clothing.categoryId, clothing.description, clothing.price, clothing.title, clothing.imageName);
 
-    clothing.clothingId = result.insertId;
+//     clothing.clothingId = result.insertId;
 
-    delete clothing.image;
+//     delete clothing.image;
 
-    return clothing;
-}
+//     return clothing;
+// }
 
 
 async function addComment(comment: CommentModel): Promise<CommentModel> {
@@ -703,9 +698,8 @@ async function unfavorite(userId: number, shoesId: number): Promise<void> {
     }
 }
 
-
 export default {
-    addClothing,
+    // addClothing,
     addCategory,
     getAllUsers,
     getAllOrders,

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
 import dataService from "../Service/DataService";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import ProductsCard from "./ProductsCard";
 
 export default function Products() {
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [shoes, setShoes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -15,8 +16,6 @@ export default function Products() {
       const response1 = await dataService.getAllCategories();
       const response2 = await dataService.getAllOrders();
       const response3 = await dataService.getAllUsers();
-      // console.log(response)
-      // console.log(response1)
       setOrders(response2);
       console.log("all orders", response2);
       setCategories(response1);
@@ -36,7 +35,6 @@ export default function Products() {
   };
 
   // Define a state variable for the selected category (initially empty)
-  const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
@@ -84,7 +82,6 @@ export default function Products() {
           : {calculateTotalStock()}
         </p>
       </div>
-      {/* Pass selectedCategory, filter function, and updateProduct function to ProductsCard */}
       <br />
       <ProductsCard
         shoes={shoes}

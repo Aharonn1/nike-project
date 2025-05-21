@@ -1,16 +1,12 @@
-import { OkPacket } from "mysql";
-import cyber from "../2-utils/cyber";
-import dal from "../2-utils/dal";
 import { AuthenticationError, ValidationError } from "../4-models/client-errors";
 import RoleModel from "../4-models/role-model";
 import UserModel from "../4-models/user-model";
-
+import cyber from "../2-utils/cyber";
+import { OkPacket } from "mysql";
+import dal from "../2-utils/dal";
 
 async function register(user: UserModel): Promise<string> {
 
-    // TODO - add Validation :
-    // user.validate();
-    // If email token:
     if (await isEmailTaken(user.email)) throw new ValidationError(`Email ${user.email} already taken`);
 
     // New USer is a USer role:
@@ -18,11 +14,6 @@ async function register(user: UserModel): Promise<string> {
 
     // Hash Password:
     user.password = cyber.hashPassword(user.password);
-
-    // // Create sql query:
-    // const updateStockValue = user.updateStock;
-    // // אם updateStockValue אינו מספר, הגדר אותו כ-0 (או ערך ברירת מחדל אחר)
-    // user.updateStock = isNaN(updateStockValue) ? 1 : updateStockValue;
 
     const sql = `INSERT INTO users (firstName, lastName, email, password, role, registrationDate, updateStock) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
@@ -38,8 +29,6 @@ async function register(user: UserModel): Promise<string> {
 
 async function login(credentials: CredentialsModel): Promise<LoginResponse> {
 
-    // Validation (assuming CredentialsModel has validation logic)
-
     // Secure Password Hashing
     const hashedPassword = cyber.hashPassword(credentials.password);
 
@@ -51,7 +40,7 @@ async function login(credentials: CredentialsModel): Promise<LoginResponse> {
         const users = await dal.execute(sql, credentials.email, hashedPassword);
 
         // Check User Existence
-        if (!users.length) {
+        if (!users) {
             throw new AuthenticationError("Incorrect email or password");
         }
 

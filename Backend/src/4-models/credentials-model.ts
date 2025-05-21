@@ -1,25 +1,25 @@
-import Joi from "joi";
 import { ValidationError } from "./client-errors";
+import Joi from "joi";
 
 class CredentialsModel {
 
-    public email: string
-    public password: string;
+    email: string
+    password: string;
 
-    public constructor(credentials: CredentialsModel) {
+    constructor(credentials: CredentialsModel) {
 
         this.email = credentials.email
         this.password = credentials.password;
     }
 
     private static validationSchema = Joi.object({
-        email : Joi.string().required().min(10).max(50),
-        password : Joi.string().required().min(6).max(256)
+        email: Joi.string().required().min(10).max(50),
+        password: Joi.string().required().min(6).max(256)
     })
 
-    public validate():void{
+    validate(): void {
         const result = CredentialsModel.validationSchema.validate(this);
-        if(result.error) throw new ValidationError(result.error.message)
+        if (result.error) throw new ValidationError(result.error.message)
     }
     // TODO: add validation
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import dataService from "../Service/DataService";
 import CategoriesCard from "./CategoriesCard";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function Categories() {
@@ -24,7 +24,6 @@ export default function Categories() {
       );
     } catch (err) {
       console.error("Error deleting category:", err);
-      // Handle deletion errors (optional)
     }
   };
 

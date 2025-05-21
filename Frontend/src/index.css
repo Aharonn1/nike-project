@@ -1931,3 +1931,196 @@ button.buy1:hover {
 .container{
   margin-top: 20px;
 } 
+
+.search-container {
+  position: relative; /* כדי שה-suggestions-box יהיה ממוקם ביחס אליו */
+  width: 300px; /* התאם לרוחב הרצוי */
+}
+
+.suggestions-box {
+  position: absolute;
+  top: 100%; /* הצגה מתחת לתיבת החיפוש */
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 10; /* כדי שההצעות יהיו מעל אלמנטים אחרים */
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.suggestion-item.no-results {
+  color: gray;
+}
+
+.search-container {
+  position: relative; /* עבור המיקום האבסולוטי של תיבת ההצעות */
+  display: flex; /* הפוך לקונטיינר Flexbox */
+  flex-direction: row; /* סדר את הפריטים בשורה */
+  align-items: center; /* יישור אנכי של הפריטים למרכז */
+}
+
+.qqq {
+  flex-grow: 1; /* תן לתיבת החיפוש לגדול ולתפוס כמה שיותר מקום */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 5px; /* הוסף קצת רווח בין תיבת החיפוש לכפתור */
+}
+
+.ddd {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.ddd:hover {
+  background-color: #e0e0e0;
+}
+
+.suggestions-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  /* סגנונות עבור רשימת ההצעות - ללא שינוי */
+}
+
+.suggestion-item-link {
+  text-decoration: none;
+  color: inherit;
+  margin-right: 10px;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.suggestion-item.no-results {
+  color: gray;
+  width: 100%;
+  text-align: center;
+}
+
+.suggestion-item-button {
+  display: inline-block;
+  padding: 8px 12px;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.suggestion-link-in-button {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cartTab1 {
+  /* ... סגנונות קיימים ... */
+  max-height: 100vh; /* דוגמה לגובה מקסימלי של סל הקניות - התאם לפי הצורך */
+  overflow-y: auto; /* אפשר גלילה אם סל הקניות עצמו גדול מדי */
+  width: 25% !important;
+
+}
+
+.listCart {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.totalPrice{
+  width: 45% !important;
+}
+
+.container-ab { /* החלף עם הקלאס של הקונטיינר האב */
+  display: flex;
+  flex-direction: row; /* או column, בהתאם לפריסה */
+  align-items: center; /* יישור אנכי אם צריך */
+  /* justify-content: flex-start; /* יישור אופקי לשמאל */
+}
+
+.totalPrice {
+  width: 45% !important;
+  /* margin-right: auto; /* ידחוף אותו לשמאל אם justify-content לא flex-start */
+}
+
+.container-ab { /* החלף עם הקלאס של הקונטיינר האב */
+  display: flex;
+  flex-direction: row; /* או column, בהתאם לפריסה */
+  align-items: left; /* יישור אנכי אם צריך */
+  /* justify-content: flex-start; /* יישור אופקי לשמאל */
+}
+
+.totalPrice {
+  width: 45% !important;
+  margin-left: auto !important;
+  /* margin-right: auto; /* ידחוף אותו לשמאל אם justify-content לא flex-start */
+}
+
+.buy1{
+  margin-left: auto !important;
+}
+
+.creditCardInput {
+  width: 100%; /* גורם לכל תיבת input לתפוס את מלוא רוחב הקונטיינר שלה */
+  padding: 10px; /* מוסיף ריווח פנימי אחיד מסביב לטקסט */
+  margin-bottom: 10px; /* מוסיף מרווח קטן מתחת לכל תיבת input כדי להפריד ביניהן */
+  border: 1px solid #ccc; /* מוסיף גבול אחיד */
+  border-radius: 4px; /* פינות מעוגלות קלות */
+  font-size: 16px; /* גודל פונט אחיד */
+  box-sizing: border-box; /* כולל את ה-padding וה-border בתוך ה-width */
+}
+
+.creditCardInput.number,
+.creditCardInput.expiry,
+.creditCardInput.cvc,
+.creditCardInput1.name {
+  /* אם אתה רוצה סגנונות ספציפיים לקלאסים האלה בעתיד, הם יהיו כאן */
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+button[type="submit"] {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}

@@ -10,6 +10,9 @@ const PaymentForm = () => {
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const [ordersToPay, setOrdersToPay] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [orderSuccess, setOrderSuccess] = useState(false); // מצב חדש להצלחת הזמנה
+  // const [loadingPayment, setLoadingPayment] = useState(false); 
+
   const [state, setState] = useState({
     number: "",
     expiry: "",
@@ -19,6 +22,7 @@ const PaymentForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [filteredOrders, setFilteredOrders] = useState(null); // Store filtered orders
+  const navigate = useNavigate(); // להגדיר useNavigate
 
   useEffect(() => {
     const fetchShoeData = async () => {
@@ -71,7 +75,6 @@ const PaymentForm = () => {
     setState((prev) => ({...prev, focus: evt.target.name }));
   };
 
-  const navigate = useNavigate(); // להגדיר useNavigate
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -109,8 +112,8 @@ const PaymentForm = () => {
 
         await dataService.updateOrdersStatus(orderIdsToUpdate,userId); // Call the correct function
 
-        notify.success("התשלום בוצע בהצלחה!");
-
+        alert("התשלום בוצע בהצלחה!");
+        setOrderSuccess(true); // עדכון מצב להצלחה
         // Reset form fields
         setState({
           number: "",
@@ -126,7 +129,11 @@ const PaymentForm = () => {
         setOrdersToPay(refetchedOrders);
         const calculatedTotalPrice = refetchedOrders.reduce((sum, order) => sum + order.itemPrice, 0);
         setTotalPrice(calculatedTotalPrice);
-        navigate('/navBarUsers'); // ניתוב לקומפוננטה navBarUsers
+        setTimeout(() => {
+          navigate('/navBarUsers'); // ניתוב לאחר השהיה
+        }, 2000); // השהיה של 2 שניות (התאם לפי הצורך)
+
+        setOrderSuccess(true);
 
       } catch (error) {
         console.error("Error during payment:", error);
@@ -162,6 +169,16 @@ const PaymentForm = () => {
         {errors.number && <div className="error">{errors.number}</div>}
         <input
           type="text"
+          name="name"
+          placeholder="Name"
+          className="creditCardInput name1"
+          value={state.name}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+        />
+        {errors.name && <div className="error">{errors.name}</div>}
+        <input
+          type="text"
           name="expiry"
           placeholder="Expiry (MM/YY)"
           className="creditCardInput expiry"
@@ -180,19 +197,15 @@ const PaymentForm = () => {
           onFocus={handleInputFocus}
         />
         {errors.cvc && <div className="error">{errors.cvc}</div>}
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          className="creditCardInput name"
-          value={state.name}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-        />
-        {errors.name && <div className="error">{errors.name}</div>}
         <button type="submit">בצע הזמנה</button>
       </form>
 
+      {orderSuccess && (
+        <div className="success-message">
+          <h2>ההזמנה בוצעה בהצלחה!</h2>
+          <p>תודה על ההזמנה שלך.</p>
+        </div>
+      )}
       {ordersToPay && ordersToPay.length > 0 && (
         <div>
           <h3>סה"כ: {totalPrice} ₪</h3>

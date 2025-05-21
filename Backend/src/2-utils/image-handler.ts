@@ -1,6 +1,6 @@
 import { UploadedFile } from "express-fileupload";
+import fsPromises from "fs/promises";
 import { v4 as uuid } from "uuid";
-import fsPromises from "fs/promises"
 import path from "path";
 import fs from "fs";
 
