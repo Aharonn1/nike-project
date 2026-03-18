@@ -1,0 +1,9 @@
+{
+  "name": "nike-monorepo",
+  "private": true,
+  "scripts": {
+    "install:all": "pnpm install",
+    "dev:frontend": "pnpm --filter Frontend dev",
+    "dev:backend": "pnpm --filter Backend dev"
+  }
+}
