@@ -1,8 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as mysql from 'mysql2/promise';
 import { ShoeData } from '../4-models/shoes-model.js';
-// ייבוא המקור היחיד התקין
-import { createEmbedding } from '../2-utils/ai-service';
+// ייבוא עם סיומת .js וייצוא מחדש למניעת שגיאת TS2459
+export { createEmbedding } from '../2-utils/ai-service.js';
+import { createEmbedding as getEmbedding } from '../2-utils/ai-service.js';
 
 dotenv.config();
 
@@ -30,13 +31,10 @@ export async function extractAndTransformData(): Promise<string[]> {
 
 export async function vectorizeChunks(chunks: string[]) {
     if (!chunks || chunks.length === 0) return [];
-    
     console.log(`\n🧠 מעבד ${chunks.length} פריטים...`);
-    
-    // שימוש בפונקציה המיובאת בלבד
-    const promises = chunks.map(chunk => createEmbedding(chunk));
+    // משתמש בפונקציה מה-ai-service המקורי
+    const promises = chunks.map(chunk => getEmbedding(chunk));
     const results = await Promise.all(promises);
-    
     return results.map((vec, i) => ({
         text: chunks[i],
         vector: vec,

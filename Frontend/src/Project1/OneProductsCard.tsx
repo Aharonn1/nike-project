@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import dataService from "../Service/DataService";
 import appConfig from "../Utils/AppConfig";
-import { FaPlay, FaHeart, FaRegHeart, FaPlus, FaMinus } from "react-icons/fa";
+import { FaPlay, FaHeart, FaRegHeart, FaPlus, FaMinus, FaPaperPlane } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import OrderModel, { OrderStatus } from "../models/OrderModel";
+import OrderModel from "../models/OrderModel";
 import shoesSizeModel from "../models/shoesSizeModel";
-import CommentModel, { CommentModelWithUser } from "../models/CommentModel";
 import { useLoaderData, useParams } from "@tanstack/react-router";
+import CommentModel, { CommentModelWithUser } from "../models/CommentModel";
 import { oneProductsCardRoute } from '../router';
 import FavoriteModel from "../models/FavoriteModel";
 
@@ -18,18 +18,15 @@ function OneProductsCard() {
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [showVideo, setShowVideo] = useState<boolean>(false);
-    const [newComment, setNewComment] = useState<string>("");
+    const [newComment, setNewComment] = useState<string>(""); // State לתגובה החדשה
     const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
 
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const { shoesId } = useParams({ from: oneProductsCardRoute.id });
     const shoesIdNumber = +shoesId;
-    
-    // 🟢 הוספת סוג לנתונים כדי למנוע שגיאות TypeScript
-    const shoeData = useLoaderData({ from: oneProductsCardRoute.id }) as any;
+    const shoeData: any = useLoaderData({ from: oneProductsCardRoute.id });
 
-    // הפעלה אוטומטית של הווידאו
     useEffect(() => {
         if (showVideo && videoRef.current) {
             videoRef.current.play().catch(err => console.error("Autoplay failed:", err));
@@ -59,12 +56,14 @@ function OneProductsCard() {
         enabled: !!loggedInUserId,
     });
 
-    const userOrdersForThisShoe = useMemo(() => {
-        if (!allOrdersData) return [];
-        return allOrdersData.filter(o => o.shoesId === shoesIdNumber && (o.status === 0 || o.status === 3));
-    }, [allOrdersData, shoesIdNumber]);
-
-    const isLiked = useMemo(() => favorites?.some(f => Number(f.shoesId) === shoesIdNumber), [favorites, shoesIdNumber]);
+    // Mutations
+    const addCommentMutation = useMutation({
+        mutationFn: (comment: CommentModel) => dataService.addComment(comment),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["comments", shoesIdNumber] });
+            setNewComment(""); // איפוס התיבה לאחר שליחה
+        }
+    });
 
     const handleLikeMutation = useMutation({
         mutationFn: () => isLiked ? dataService.removeFavorite(loggedInUserId!, shoesIdNumber) : dataService.addFavorite(loggedInUserId!, shoesIdNumber),
@@ -84,14 +83,27 @@ function OneProductsCard() {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["allOrdersForUser", loggedInUserId] })
     });
 
-    const handleVideoMouseEnter = () => setShowVideo(true);
-    const handleVideoMouseLeave = () => {
-        setShowVideo(false);
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
-        }
-    };
+    // Logic
+    const userOrdersForThisShoe = useMemo(() => {
+        if (!allOrdersData) return [];
+        return allOrdersData.filter(o => o.shoesId === shoesIdNumber && (o.status === 0 || o.status === 3));
+    }, [allOrdersData, shoesIdNumber]);
+
+    const isLiked = useMemo(() => favorites?.some(f => Number(f.shoesId) === shoesIdNumber), [favorites, shoesIdNumber]);
+
+    const handleAddComment = () => {
+    if (!newComment.trim()) return;
+
+    // אנחנו יוצרים אובייקט חלקי ושולחים אותו לשרת
+    // השרת כבר יוסיף לו ID ותאריך באופן אוטומטי
+    const comment = {
+        shoesId: shoesIdNumber,
+        userId: loggedInUserId,
+        commentText: newComment,
+    } as CommentModel; 
+
+    addCommentMutation.mutate(comment);
+};
 
     const handleAddToCart = () => {
         if (!selectedSizeId) return alert("Please select a size");
@@ -106,24 +118,16 @@ function OneProductsCard() {
         if (order) deleteOrderMutation.mutate({ orderId: order.orderId });
     };
 
-    // 🔴 🔴 🔴 התיקון הקריטי כאן! 🔴 🔴 🔴
-    // אם הנתונים בטעינה או ש-shoeData עדיין ריק, אנחנו לא מציגים את הדף כדי למנוע קריסה
-    if (isStockLoading || isOrdersLoading || isCommentsLoading || isFavoritesLoading || !shoeData) {
-        return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '20px', fontWeight: 'bold' }}>
-                Loading Shoe Details...
-            </div>
-        );
-    }
+    if (isStockLoading || isOrdersLoading || isCommentsLoading || isFavoritesLoading) return <div>Loading...</div>;
 
     return (
         <div style={pageWrapperStyle}>
             <div style={productContainerStyle}>
                 
-                {/* Gallery */}
+                {/* Gallery Section */}
                 <div style={gallerySectionStyle}>
                     <div style={thumbnailColumnStyle}>
-                        <div style={thumbStyle} onMouseEnter={handleVideoMouseEnter} onMouseLeave={handleVideoMouseLeave}>
+                        <div style={thumbStyle} onMouseEnter={() => setShowVideo(true)} onMouseLeave={() => setShowVideo(false)}>
                             <FaPlay size={14} />
                         </div>
                         {[shoeData.imageName, shoeData.imageNameFront, shoeData.imageNameAbove, shoeData.imageNameBack, shoeData.imageNameDown]
@@ -132,18 +136,18 @@ function OneProductsCard() {
                                  onMouseEnter={() => { setSelectedImage(img!); setShowVideo(false); }} />
                         ))}
                     </div>
-                    <div style={mainDisplayStyle} onMouseEnter={handleVideoMouseEnter} onMouseLeave={handleVideoMouseLeave}>
+                    <div style={mainDisplayStyle}>
                         {showVideo ? (
                             <video ref={videoRef} muted playsInline loop crossOrigin="anonymous" style={videoStyle}>
                                 <source src={appConfig.shoesImagesUsersUrl + shoeData.video} type="video/mp4" />
                             </video>
                         ) : (
-                            <img src={appConfig.shoesImagesUsersUrl + (selectedImage || shoeData.imageName)} style={mainImgStyle} alt="Product" />
+                            <img src={appConfig.shoesImagesUsersUrl + (selectedImage || shoeData.imageName)} style={mainImgStyle} />
                         )}
                     </div>
                 </div>
 
-                {/* Info */}
+                {/* Info Section */}
                 <div style={infoSectionStyle}>
                     <div style={headerRowStyle}>
                         <span style={categoryTextStyle}>{shoeData.categoryName}</span>
@@ -191,8 +195,26 @@ function OneProductsCard() {
                         <span>⭐ {shoeData.total_favorites || 0} Favorites</span>
                     </div>
 
+                    {/* Comments Section */}
                     <div style={commentsSectionStyle}>
                         <h3 style={sectionLabelStyle}>REVIEWS ({comments?.length || 0})</h3>
+                        
+                        {/* תוספת: תיבת הוספת תגובה */}
+                        {loggedInUserId && (
+                            <div style={addCommentBoxStyle}>
+                                <input 
+                                    style={commentInputStyle} 
+                                    placeholder="Add a review..." 
+                                    value={newComment} 
+                                    onChange={(e) => setNewComment(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                                />
+                                <button style={sendCommentButtonStyle} onClick={handleAddComment}>
+                                    <FaPaperPlane size={14} color="#fff" />
+                                </button>
+                            </div>
+                        )}
+
                         <div style={commentsListStyle}>
                             {comments?.map(c => (
                                 <div key={c.commentId} style={commentCardStyle}>
@@ -208,11 +230,11 @@ function OneProductsCard() {
     );
 }
 
-// --- סגנונות (ללא שינוי) ---
+/* --- Styles --- */
 const pageWrapperStyle: React.CSSProperties = { padding: "40px 20px", backgroundColor: "#fff", minHeight: "100vh", fontFamily: "'Inter', sans-serif" };
 const productContainerStyle: React.CSSProperties = { display: "flex", gap: "60px", maxWidth: "1300px", margin: "0 auto" };
 const gallerySectionStyle: React.CSSProperties = { display: "flex", gap: "15px", flex: "1.6" };
-const thumbnailColumnStyle: React.CSSProperties = { display: "flex", flexDirection: "column", justifyContent: "space-between", height: "650px", width: "70px" };
+const thumbnailColumnStyle: React.CSSProperties = { display: "flex", flexDirection: "column", gap: "10px", width: "70px" };
 const thumbStyle: React.CSSProperties = { width: "70px", height: "70px", backgroundColor: "#f5f5f5", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", borderRadius: "8px" };
 const thumbImgStyle: React.CSSProperties = { width: "70px", height: "70px", objectFit: "cover", cursor: "pointer", borderRadius: "8px" };
 const mainDisplayStyle: React.CSSProperties = { flex: 1, backgroundColor: "#f6f6f6", borderRadius: "20px", overflow: "hidden", height: "650px" };
@@ -221,14 +243,14 @@ const videoStyle: React.CSSProperties = { width: "100%", height: "100%", objectF
 const infoSectionStyle: React.CSSProperties = { flex: 1, display: "flex", flexDirection: "column", gap: "15px" };
 const headerRowStyle: React.CSSProperties = { display: "flex", justifyContent: "space-between", alignItems: "center" };
 const categoryTextStyle: React.CSSProperties = { fontSize: "16px", fontWeight: "600", color: "#d93921" };
-const likeButtonStyle: React.CSSProperties = { cursor: "pointer" }; 
+const likeButtonStyle: React.CSSProperties = { cursor: "pointer" };
 const titleStyle: React.CSSProperties = { fontSize: "42px", fontWeight: "900", letterSpacing: "-1.5px" };
-const priceContainerStyle: React.CSSProperties = { margin: "10px 0" }; 
+const priceContainerStyle: React.CSSProperties = { margin: "10px 0" };
 const salePriceStyle: React.CSSProperties = { fontSize: "28px", fontWeight: "800" };
 const descriptionStyle: React.CSSProperties = { color: "#555", lineHeight: "1.6", fontSize: "16px" };
 const sectionLabelStyle: React.CSSProperties = { fontWeight: "800", fontSize: "16px", marginTop: "15px" };
 const sizeGridStyle: React.CSSProperties = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: "10px" };
-const sizeButtonStyle: React.CSSProperties = { padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: "700" };
+const sizeButtonStyle: React.CSSProperties = { padding: "14px", borderRadius: "8px", fontSize: "15px", fontWeight: "700", cursor: "pointer" };
 const actionRowStyle: React.CSSProperties = { display: "flex", gap: "15px", marginTop: "25px" };
 const qtyControlStyle: React.CSSProperties = { display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: "40px", padding: "5px 20px" };
 const qtyBtnStyle: React.CSSProperties = { border: "none", background: "none", cursor: "pointer", padding: "10px" };
@@ -236,7 +258,12 @@ const qtyValueStyle: React.CSSProperties = { width: "30px", textAlign: "center",
 const addToBagButtonStyle: React.CSSProperties = { flex: 1, backgroundColor: "#000", color: "#fff", border: "none", borderRadius: "40px", fontSize: "16px", fontWeight: "800", cursor: "pointer" };
 const statsStyle: React.CSSProperties = { display: "flex", gap: "30px", fontSize: "14px", color: "#777", borderBottom: "1px solid #eee", paddingBottom: "20px" };
 const commentsSectionStyle: React.CSSProperties = { marginTop: "20px" };
-const commentsListStyle: React.CSSProperties = { maxHeight: "250px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px" };
+const commentsListStyle: React.CSSProperties = { maxHeight: "250px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", marginTop: "15px" };
 const commentCardStyle: React.CSSProperties = { padding: "15px", backgroundColor: "#f8f8f8", borderRadius: "12px", border: "1px solid #eee" };
+
+// סטייל חדש לתיבת התגובה
+const addCommentBoxStyle: React.CSSProperties = { display: "flex", gap: "10px", marginTop: "10px" };
+const commentInputStyle: React.CSSProperties = { flex: 1, padding: "12px 20px", borderRadius: "40px", border: "1px solid #ddd", fontSize: "14px", outline: "none" };
+const sendCommentButtonStyle: React.CSSProperties = { backgroundColor: "#000", border: "none", borderRadius: "50%", width: "45px", height: "45px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" };
 
 export default OneProductsCard;

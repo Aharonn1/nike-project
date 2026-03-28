@@ -31,13 +31,14 @@ router.post("/ask-product", async (request: Request, response: Response, next: N
 
 router.post("/search", async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const { question } = request.body;
-        console.log("🚀 Search request for:", question);
-        const fullResponse = await searchAllShoes(question) as any;
+        const { question, history } = request.body; // קבלת ההיסטוריה מהפרונט
+        console.log("🚀 Search request:", question);
         
-        // שליחת 'answer' כדי להתאים לפרונט
+        // שליחת השאלה + ההיסטוריה ללוגיקה
+        const fullResponse = await searchAllShoes(question, history) as any;
+        
         response.json({
-            answer: fullResponse.answer || fullResponse.text || "מצאתי נעליים עבורך:",
+            answer: fullResponse.answer,
             shoes: fullResponse.shoes || []
         });
     } catch (err: any) {

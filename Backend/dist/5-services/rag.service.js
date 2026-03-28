@@ -33,13 +33,16 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createEmbedding = void 0;
 exports.extractAndTransformData = extractAndTransformData;
 exports.vectorizeChunks = vectorizeChunks;
 exports.initialRagIndexing = initialRagIndexing;
 const dotenv = __importStar(require("dotenv"));
 const mysql = __importStar(require("mysql2/promise"));
-// ייבוא המקור היחיד התקין
-const ai_service_1 = require("../2-utils/ai-service");
+// ייבוא עם סיומת .js וייצוא מחדש למניעת שגיאת TS2459
+var ai_service_js_1 = require("../2-utils/ai-service.js");
+Object.defineProperty(exports, "createEmbedding", { enumerable: true, get: function () { return ai_service_js_1.createEmbedding; } });
+const ai_service_js_2 = require("../2-utils/ai-service.js");
 dotenv.config();
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -66,8 +69,8 @@ async function vectorizeChunks(chunks) {
     if (!chunks || chunks.length === 0)
         return [];
     console.log(`\n🧠 מעבד ${chunks.length} פריטים...`);
-    // שימוש בפונקציה המיובאת בלבד
-    const promises = chunks.map(chunk => (0, ai_service_1.createEmbedding)(chunk));
+    // משתמש בפונקציה מה-ai-service המקורי
+    const promises = chunks.map(chunk => (0, ai_service_js_2.createEmbedding)(chunk));
     const results = await Promise.all(promises);
     return results.map((vec, i) => ({
         text: chunks[i],

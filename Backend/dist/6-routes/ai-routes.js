@@ -29,12 +29,12 @@ router.post("/ask-product", async (request, response, next) => {
 });
 router.post("/search", async (request, response, next) => {
     try {
-        const { question } = request.body;
-        console.log("🚀 Search request for:", question);
-        const fullResponse = await (0, ai_search_logic_js_1.searchAllShoes)(question);
-        // שליחת 'answer' כדי להתאים לפרונט
+        const { question, history } = request.body; // קבלת ההיסטוריה מהפרונט
+        console.log("🚀 Search request:", question);
+        // שליחת השאלה + ההיסטוריה ללוגיקה
+        const fullResponse = await (0, ai_search_logic_js_1.searchAllShoes)(question, history);
         response.json({
-            answer: fullResponse.answer || fullResponse.text || "מצאתי נעליים עבורך:",
+            answer: fullResponse.answer,
             shoes: fullResponse.shoes || []
         });
     }

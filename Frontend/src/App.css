@@ -1,0 +1,68 @@
+/* הגדרה למחשבים בלבד - לא מפריע לטלפון */
+@media (min-width: 769px) {
+  html {
+    zoom: 0.8; /* משאיר את התחושה האוורירית שרצית רק במחשב */
+  }
+}
+
+/* הגדרות כלליות */
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* פונט רספונסיבי שמתאים את עצמו לגודל המסך */
+  font-size: calc(14px + 1vmin); 
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+/* 📱 התאמות ספציפיות לטלפון (מסכים קטנים מ-768px) */
+@media (max-width: 768px) {
+  .App-header {
+    min-height: auto; /* מונע הימרחות של ה-Header בטלפון */
+    padding: 40px 20px;
+  }
+  
+  .App-logo {
+    height: 30vh; /* מקטין קצת את הלוגו בטלפון */
+    margin-bottom: 20px;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* מניעת בריחה של תוכן הצידה בטלפון */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
