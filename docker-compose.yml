@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "8080:80"
+    networks:
+      - shoe-network
+    depends_on:
+      - backend
+
+  backend:
+    build: ./Backend
+    ports:
+      - "3001:3001" # שיניתי ל-3001 כדי להתאים ל-.env שלך
+    env_file:
+      - ./Backend/.env # מוסיף את משתני הסביבה (Gemini, DB וכו')
+    networks:
+      - shoe-network
+    depends_on:
+      - database
+
+  database:
+    image: redis:alpine
+    command: redis-server --save 60 1 --loglevel warning # מוודא שמירה לדיסק כל 60 שניות
+    volumes:
+      - redis_data:/data 
+    networks:
+      - shoe-network
+
+volumes:
+  redis_data:
+
+networks:
+  shoe-network:
+    driver: bridge
