@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   backend:
     build: ./Backend
@@ -12,6 +13,17 @@ services:
 
   database:
     image: redis:alpine
+    restart: always
+    networks:
+      - shoe-network
+
+  uptime-monitor:
+    image: node:alpine
+    container_name: uptime-monitor
+    working_dir: /app
+    volumes:
+      - ./uptime-checker:/app
+    command: sh -c "npm install axios && node index.js"
     restart: always
     networks:
       - shoe-network
