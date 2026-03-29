@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   proxy:
-  image: nginx:alpine
+    image: nginx:alpine
     container_name: nginx-proxy
     ports:
       - "80:80"
@@ -16,7 +16,6 @@ services:
 
   backend:
     build: ./Backend
-
     expose:
       - "3001"
     restart: always
