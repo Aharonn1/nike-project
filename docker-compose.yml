@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - shoe-network
+    restart: always
+
+  backend:
+    build: ./Backend
+    expose:
+      - "3001"
+    restart: always
+    networks:
+      - shoe-network
+    depends_on:
+      - database
+
+  database:
+    image: redis:alpine
+    restart: always
+    networks:
+      - shoe-network
+
+  uptime-monitor:
+    image: node:alpine
+    container_name: uptime-monitor
+    working_dir: /app
+    volumes:
+      - ./uptime-checker:/app
+    command: sh -c "npm install axios && node index.js"
+    restart: always
+    networks:
+      - shoe-network
+
+networks:
+  shoe-network:
+    driver: bridge
