@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # שומר הסף - Nginx Reverse Proxy
   proxy:
     image: nginx:alpine
     container_name: nginx-proxy
@@ -14,8 +15,11 @@ services:
       - shoe-network
     restart: always
 
+  # ליבת המערכת - Backend
   backend:
-    build: ./Backend
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
     expose:
       - "3001"
     restart: always
@@ -24,12 +28,14 @@ services:
     depends_on:
       - database
 
+  # בסיס הנתונים - Redis
   database:
     image: redis:alpine
     restart: always
     networks:
       - shoe-network
 
+  # השומר - Uptime Monitor
   uptime-monitor:
     image: node:alpine
     container_name: uptime-monitor
