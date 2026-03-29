@@ -6,7 +6,7 @@ services:
     image: nginx:alpine
     container_name: nginx-proxy
     ports:
-      - "80:80"    # מאפשר גישה לאתר ללא צורך בפורט 3001 ב-URL
+      - "80:80"    # מאפשר גישה לאתר בפורט הסטנדרטי
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -18,7 +18,7 @@ services:
   # ליבת המערכת - Backend
   backend:
     build: ./Backend
-    # שים לב: הורדנו את ה-ports החיצוניים כדי שרק ה-Proxy יוכל לדבר איתו
+    # הפורט חשוף רק בתוך הרשת הפנימית ל-Proxy
     expose:
       - "3001"
     restart: always
