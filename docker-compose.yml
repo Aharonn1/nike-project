@@ -1,22 +1,40 @@
 version: '3.8'
 
 services:
+  # שומר הסף - Nginx Reverse Proxy
+  proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"    # מאפשר גישה לאתר ללא צורך בפורט 3001 ב-URL
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - shoe-network
+    restart: always
+
+  # ליבת המערכת - Backend
   backend:
     build: ./Backend
-    ports:
-      - "3001:3001"
+    # שים לב: הורדנו את ה-ports החיצוניים כדי שרק ה-Proxy יוכל לדבר איתו
+    expose:
+      - "3001"
     restart: always
     networks:
       - shoe-network
     depends_on:
       - database
 
+  # בסיס הנתונים - Redis
   database:
     image: redis:alpine
     restart: always
     networks:
       - shoe-network
 
+  # השומר - Uptime Monitor
   uptime-monitor:
     image: node:alpine
     container_name: uptime-monitor
