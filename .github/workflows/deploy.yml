@@ -15,10 +15,11 @@ jobs:
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: 16.171.44.180
-          username: ubuntu
-          key: ${{ secrets.AWS_SSH_KEY }}
+          host: ${{ secrets.HOST }}      # משתמש ב-Secret שהגדרת
+          username: ${{ secrets.USERNAME }}  # משתמש ב-Secret שהגדרת
+          key: ${{ secrets.SSH_KEY }}    # משתמש ב-Secret שהגדרת
           script: |
             cd /home/ubuntu/nike-project
             git pull origin main
             sudo docker-compose up -d --build
+            echo "🚀 האתר עודכן אוטומטית ברמה של סניור!"
