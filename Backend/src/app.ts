@@ -39,7 +39,6 @@ interface IAppConfig {
 }
 
 const server = express();
-console.log("Senior mode active1");
 // התיקון הסניורי לשגיאת ה-TypeScript: שימוש ב-unknown כמתווך
 const config = (AppConfig as unknown) as IAppConfig;
 
@@ -81,6 +80,7 @@ server.use(catchAll);
 
         server.listen(config.port, '0.0.0.0', () => {
             console.log(`🚀 Braingine Server is running in ${process.env.NODE_ENV || 'development'} mode`);
+            console.log("🚀 Senior mode active1 - Server is UP!"); // <--- תשים את זה כאן
             console.log(`📡 Listening on port: ${config.port}`);
             console.log(`📁 Static files served from: ${finalImagesPath}`);
         });
