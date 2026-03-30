@@ -39,7 +39,7 @@ interface IAppConfig {
 }
 
 const server = express();
-console.log("Senior mode active");
+console.log("Senior mode active1");
 // התיקון הסניורי לשגיאת ה-TypeScript: שימוש ב-unknown כמתווך
 const config = (AppConfig as unknown) as IAppConfig;
 
