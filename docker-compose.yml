@@ -17,7 +17,9 @@ services:
 
   # הלב של המערכת - הלוגיקה
   backend:
-    build: ./nike-project/Backend
+    build: ./Backend  # פשוט ככה, בלי nike-project לפני זה
+    env_file:
+      - ./Backend/.env  # זה אומר לדוקר: קח את המשתנים מכאן והזרק אותם פנימה
     expose:
       - "3001"
     restart: always

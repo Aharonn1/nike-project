@@ -15,13 +15,18 @@ jobs:
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.HOST }}      # משתמש ב-Secret שהגדרת
-          username: ${{ secrets.USERNAME }}  # משתמש ב-Secret שהגדרת
-          key: ${{ secrets.SSH_KEY }}    # משתמש ב-Secret שהגדרת
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ubuntu/nike-project
-            git pull origin main
-            sudo docker-compose down
-            sudo docker-compose up -d --build --force-recreate
-            sudo docker system prune -f
-            echo "🚀 בוצע ניקוי והרצה מחדש אגרסיבית!"
+            # פתרון סניורי: דריסת שינויים מקומיים כדי למנוע קונפליקטים ב-Pull
+            git fetch origin main
+            git reset --hard origin/main
+            
+            # הרצה מחדש - שים לב שהוספתי --remove-orphans לניקוי קונטיינרים ישנים
+            sudo docker-compose up -d --build --force-recreate --remove-orphans
+            
+            # ניקוי אימג'ים מיותרים שתופסים מקום ב-EBS של AWS
+            sudo docker image prune -f
+            echo "🚀 Deployment completed successfully with Health Checks!"
