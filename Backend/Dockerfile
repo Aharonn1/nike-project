@@ -15,4 +15,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 5000
 # וודא שזה הקובץ הראשי שלך בתוך dist
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/app.js"]
