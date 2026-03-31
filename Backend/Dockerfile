@@ -1,18 +1,26 @@
-# שלב 1: בנייה
-FROM node:20-alpine as builder
+# Stage 1: Build
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install
 COPY . .
-RUN npm run build 
+RUN npm run build
 
-# שלב 2: הרצה
-FROM node:20-alpine
+# Stage 2: Production
+FROM node:18-alpine
 WORKDIR /app
+
+# יצירת התיקייה שהקוד שלך מצפה לה (כדי למנוע את שגיאת ה-ENOENT)
+RUN mkdir -p /app/src/1-assets/images
+
 COPY package*.json ./
 RUN npm install --production --legacy-peer-deps
+
+# העתקת הקוד המקומפל
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 5000
-# וודא שזה הקובץ הראשי שלך בתוך dist
+# חשיפת הפורט הסניורי
+EXPOSE 3001
+
+# הרצה
 CMD ["node", "dist/app.js"]
