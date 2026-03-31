@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import expressFileUpload from "express-fileupload";
 import dotenv from "dotenv";
+import { createClient } from "redis";
 
 // 1. טעינת משתני סביבה ואימות (Pre-flight Check)
 dotenv.config();
@@ -32,15 +33,20 @@ import aiRoutes from "./6-routes/ai-routes.js";
 import adminRoutes from "./6-routes/admin-routes.js";
 import braingineController from "./6-routes/braingine-controller.js";
 
-// --- הגדרת Interface וטיפול בשגיאת ה-Type שראינו ---
 interface IAppConfig {
     port: number;
-    // אם יש לך משתנים נוספים ב-AppConfig, תוסיף אותם כאן
 }
 
 const server = express();
-// התיקון הסניורי לשגיאת ה-TypeScript: שימוש ב-unknown כמתווך
 const config = (AppConfig as unknown) as IAppConfig;
+
+// --- הגדרת Redis (ארכיטקטורת Caching) ---
+const redisClient = createClient({
+    url: "redis://redis:6379"
+});
+
+redisClient.on("error", (err) => console.error("❌ Redis Error:", err));
+redisClient.on("connect", () => console.log("🚀 Redis Connected Successfully!"));
 
 // --- נתיבים לנכסים סטטיים ---
 const finalImagesPath = "/home/ubuntu/backend/dist/1-assets/images/images";
@@ -75,18 +81,27 @@ server.use(catchAll);
 // --- 5. הפעלת השרת (Bootstrap) ---
 (async () => {
     try {
-        // וידוא שהנכסים קיימים לפני התחלת העבודה
+        // שלב סניורי: מנסים להתחבר ל-Redis אבל לא קורסים אם הוא לא זמין
+        try {
+            await redisClient.connect();
+        } catch (redisErr) {
+            console.error("⚠️ Warning: Could not connect to Redis. Caching will be disabled.");
+        }
+
         await ensureAllAssetsCopied();
 
         server.listen(config.port, '0.0.0.0', () => {
-            console.log(`🚀 Braingine Server is running in ${process.env.NODE_ENV || 'development'} mode`);
-            console.log("🚀 Senior mode active1 - Server is UP!"); // <--- תשים את זה כאן
-            console.log(`📡 Listening on port: ${config.port}`);
-            console.log(`📁 Static files served from: ${finalImagesPath}`);
+            console.log("-----------------------------------------");
+            console.log(`🚀 Braingine Server Running | Port: ${config.port}`);
+            console.log("🚀 Senior mode active1 - Server is UP!");
+            console.log(`📁 Static files: ${finalImagesPath}`);
+            console.log("-----------------------------------------");
         });
 
     } catch (err) {
-        console.error("❌ Failed to start server:", err);
+        console.error("❌ Critical Failure: Failed to start server:", err);
         process.exit(1);
     }
 })();
+
+export { redisClient };
