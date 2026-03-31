@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # השומר בכניסה - מנתב תנועה
+  # 🛡️ ה-Reverse Proxy (Nginx) - שער הכניסה למערכת
   proxy:
     image: nginx:alpine
     container_name: nginx-proxy
@@ -10,16 +10,20 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy # מחכה שה-Backend ידווח שהוא UP באמת
     networks:
       - shoe-network
     restart: always
 
-  # הלב של המערכת - הלוגיקה
+  # 🚀 ה-Backend (Node.js) - הלב הלוגי
   backend:
-    build: ./Backend  # פשוט ככה, בלי nike-project לפני זה
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: nike-project_backend_1
     env_file:
-      - ./Backend/.env  # זה אומר לדוקר: קח את המשתנים מכאן והזרק אותם פנימה
+      - ./Backend/.env
     expose:
       - "3001"
     restart: always
@@ -27,12 +31,18 @@ services:
       - shoe-network
     depends_on:
       - redis
-    # כאן אנחנו מוסיפים משתנה סביבה כדי שה-Backend ידע איפה Redis נמצא
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+    # 🏥 מנגנון ה-Self-Healing: בודק את ה-Route שיצרנו בקוד
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
-  # שכבת ה-Caching (התוספת הסניורית)
+  # ⚡ שכבת ה-Caching (Redis) - לביצועים גבוהים
   redis:
     image: redis:alpine
     container_name: redis-cache
@@ -40,7 +50,7 @@ services:
     networks:
       - shoe-network
 
-  # שומר הסף - בודק שהאתר לא נופל
+  # 🔍 שומר הסף (Uptime Monitor) - מוודא זמינות חיצונית
   uptime-monitor:
     image: node:alpine
     container_name: uptime-monitor
@@ -52,6 +62,33 @@ services:
     networks:
       - shoe-network
 
+  # 📊 Prometheus - בסיס הנתונים שאוסף מדדים (Metrics)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - shoe-network
+    restart: always
+
+  # 📈 Grafana - לוח המחוונים (Dashboard) הויזואלי
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3002:3000" # גישה דרך http://your-ip:3002
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # חובה לשנות ב-Production!
+    networks:
+      - shoe-network
+    depends_on:
+      - prometheus
+    restart: always
+
+# 🌐 הגדרת הרשת הפנימית המבודדת
 networks:
   shoe-network:
     driver: bridge

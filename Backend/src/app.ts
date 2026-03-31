@@ -1,8 +1,9 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import expressFileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import { createClient } from "redis";
+import client from "prom-client";
 
 // 1. טעינת משתני סביבה ואימות (Pre-flight Check)
 dotenv.config();
@@ -40,6 +41,34 @@ interface IAppConfig {
 const server = express();
 const config = (AppConfig as unknown) as IAppConfig;
 
+// --- 📊 הגדרת Metrics (Prometheus) ---
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+// מדד סניורי: מונה בקשות לפי נתיב וסטטוס
+const httpRequestCounter = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'status'],
+});
+register.registerMetric(httpRequestCounter);
+
+// Middleware לתיעוד כל בקשה שנכנסת
+server.use((req: Request, res: Response, next: NextFunction) => {
+    res.on('finish', () => {
+        if (req.route) {
+            httpRequestCounter.labels(req.method, req.route.path, res.statusCode.toString()).inc();
+        }
+    });
+    next();
+});
+
+// נתיב ה-Metrics עבור Prometheus
+server.get("/metrics", async (req: Request, res: Response) => {
+    res.set("Content-Type", register.contentType);
+    res.end(await register.metrics());
+});
+
 // --- הגדרת Redis (ארכיטקטורת Caching) ---
 const redisClient = createClient({
     url: "redis://redis:6379"
@@ -62,16 +91,13 @@ server.use(cors(corsOptions));
 server.use(express.json());
 server.use(expressFileUpload());
 
-// --- 🎯 נתיב Health Check (מוגדר מוקדם ככל האפשר) ---
-// זהו הצינור שדוקר יבדוק כל 30 שניות
-server.get("/api/health", async (req, res) => {
+// --- 🎯 נתיב Health Check ---
+server.get("/api/health", async (req: Request, res: Response) => {
     try {
-        // בודקים אם רדיס מחובר ומגיב
         if (!redisClient.isOpen) throw new Error("Redis connection is closed");
         await redisClient.ping();
-        
         res.status(200).json({ status: "UP", services: { redis: "OK" } });
-    } catch (err) {
+    } catch (err: any) {
         console.error("⚠️ Health Check Failed:", err.message);
         res.status(503).json({ status: "DOWN", reason: err.message });
     }
@@ -89,29 +115,26 @@ server.use("/api", aiRoutes);
 server.use("/api", braingineController);
 server.use("/api/admin", adminRoutes);
 
-// --- 4. טיפול בשגיאות (חייב להיות בסוף הנתיבים) ---
+// --- 4. טיפול בשגיאות ---
 server.use(routeNotFound);
 server.use(catchAll);
 
 // --- 5. הפעלת השרת (Bootstrap) ---
 (async () => {
     try {
-        // חיבור ל-Redis - סניור מוד: לא מפילים שרת בגלל קאש
         try {
             await redisClient.connect();
         } catch (redisErr) {
             console.error("⚠️ Warning: Could not connect to Redis. Caching will be disabled.");
         }
 
-        // וידוא נכסים (Assets)
         await ensureAllAssetsCopied();
 
-        // הפעלת האזנה
         server.listen(config.port, '0.0.0.0', () => {
             console.log("-----------------------------------------");
             console.log(`🚀 Braingine Server Running | Port: ${config.port}`);
             console.log("🚀 Senior mode active - Server is UP!");
-            console.log(`📁 Static files path: ${finalImagesPath}`);
+            console.log(`📁 Metrics available at: http://localhost:${config.port}/metrics`);
             console.log("-----------------------------------------");
         });
 
