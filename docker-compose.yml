@@ -17,6 +17,7 @@ services:
     restart: always
 
   # 🚀 ה-Backend (Node.js) - הלב הלוגי
+ # 🚀 ה-Backend (Node.js) - הלב הלוגי
   backend:
     build: 
       context: ./Backend
@@ -24,8 +25,10 @@ services:
     container_name: nike-project_backend_1
     env_file:
       - ./Backend/.env
-    expose:
-      - "3001"
+    # --- שינוי קריטי כאן ---
+    ports:
+      - "3001:3001" 
+    # -----------------------
     restart: always
     networks:
       - shoe-network
@@ -34,7 +37,6 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    # 🏥 מנגנון ה-Self-Healing: בודק את ה-Route שיצרנו בקוד
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
       interval: 20s
