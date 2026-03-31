@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # השומר בכניסה - מנתב תנועה
   proxy:
     image: nginx:alpine
     container_name: nginx-proxy
@@ -14,22 +15,30 @@ services:
       - shoe-network
     restart: always
 
+  # הלב של המערכת - הלוגיקה
   backend:
-    build: ./Backend
+    build: ./nike-project/Backend
     expose:
       - "3001"
     restart: always
     networks:
       - shoe-network
     depends_on:
-      - database
+      - redis
+    # כאן אנחנו מוסיפים משתנה סביבה כדי שה-Backend ידע איפה Redis נמצא
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
-  database:
+  # שכבת ה-Caching (התוספת הסניורית)
+  redis:
     image: redis:alpine
+    container_name: redis-cache
     restart: always
     networks:
       - shoe-network
 
+  # שומר הסף - בודק שהאתר לא נופל
   uptime-monitor:
     image: node:alpine
     container_name: uptime-monitor
